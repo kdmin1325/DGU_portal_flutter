@@ -88,3 +88,13 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+  assets:
+    - assets/dgumain.png
+    - assets/eclass.png
+    - assets/bus.png
+    - assets/mnoti.png
+    - assets/uni.png
+    - assets/noti.png
+    - assets/scnoti.png
+    - assets/donoti.png
