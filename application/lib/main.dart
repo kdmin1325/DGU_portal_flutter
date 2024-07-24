@@ -49,41 +49,32 @@ class MainScreen extends StatelessWidget {
             double squareIconSize = constraints.maxWidth * squareIconSizeFactor;
             double circleIconSize = constraints.maxWidth * circleIconSizeFactor;
             double spacing = constraints.maxWidth * 0.04;
-            double circleIconTopOffset = constraints.maxHeight * 0.5;
 
             return Padding(
               padding: EdgeInsets.all(spacing),
-              child: Stack(
+              child: ListView(
                 children: [
-                  Column(
+                  GridView.count(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: spacing,
+                    mainAxisSpacing: spacing,
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                     children: [
-                      Expanded(
-                        child: GridView.count(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: spacing,
-                          mainAxisSpacing: spacing,
-                          children: [
-                            _buildGridItem(context, 'assets/eclass.png', squareIconSize, 'https://eclass.dongguk.ac.kr/home/mainHome/Form/main'),
-                            _buildGridItem(context, 'assets/noti.png', squareIconSize, 'https://web.dongguk.ac.kr/article/generalnotice/list'),
-                            _buildGridItem(context, 'assets/bus.png', squareIconSize, 'https://dongguk.unibus.kr/#/'),
-                            _buildGridItem(context, 'assets/scnoti.png', squareIconSize, 'https://web.dongguk.ac.kr/article/acdnotice/list'),
-                          ],
-                        ),
-                      ),
+                      _buildGridItem(context, 'assets/eclass.png', squareIconSize, 'https://eclass.dongguk.ac.kr/home/mainHome/Form/main'),
+                      _buildGridItem(context, 'assets/noti.png', squareIconSize, 'https://web.dongguk.ac.kr/article/generalnotice/list'),
+                      _buildGridItem(context, 'assets/bus.png', squareIconSize, 'https://dongguk.unibus.kr/#/'),
+                      _buildGridItem(context, 'assets/scnoti.png', squareIconSize, 'https://web.dongguk.ac.kr/article/acdnotice/list'),
                     ],
                   ),
-                  Positioned(
-                    top: circleIconTopOffset,
-                    left: 0,
-                    right: 0,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        _buildCircleItem(context, 'assets/mnoti.png', circleIconSize, 'https://web.dongguk.ac.kr/article/servicenotice/list'),
-                        _buildCircleItem(context, 'assets/donoti.png', circleIconSize, 'https://dorm.dongguk.ac.kr/'),
-                        _buildCircleItem(context, 'assets/uni.png', circleIconSize, null), // 단과대 아이콘은 클릭 기능 없음
-                      ],
-                    ),
+                  SizedBox(height: spacing),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildCircleItem(context, 'assets/mnoti.png', circleIconSize, 'https://web.dongguk.ac.kr/article/servicenotice/list'),
+                      _buildCircleItem(context, 'assets/donoti.png', circleIconSize, 'https://dorm.dongguk.ac.kr/'),
+                      _buildCircleItem(context, 'assets/uni.png', circleIconSize, null), // 단과대 아이콘은 클릭 기능 없음
+                    ],
                   ),
                 ],
               ),
