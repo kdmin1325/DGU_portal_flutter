@@ -38,17 +38,12 @@ dependencies:
   cupertino_icons: ^1.0.6
   css_colors: ^1.1.5
   webview_flutter: ^4.8.0
-  webview_flutter_android: ^3.16.0
-  webview_flutter_wkwebview: ^3.13.0
+  webview_flutter_platform_interface: ^2.10.0
+
 
 dev_dependencies:
-  build_runner: ^2.1.5
-  espresso: ^0.4.0
   flutter_test:
     sdk: flutter
-  integration_test:
-    sdk: flutter
-  webview_flutter_platform_interface: ^2.10.0
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
