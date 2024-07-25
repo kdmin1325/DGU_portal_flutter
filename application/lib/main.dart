@@ -68,12 +68,26 @@ class MainScreen extends StatelessWidget {
                           ],
                         ),
                         SizedBox(height: spacing),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        Column(
                           children: [
-                            _buildCircleItem(context, 'assets/mnoti.png', circleIconSize, 'https://web.dongguk.ac.kr/article/servicenotice/list', true),
-                            _buildCircleItem(context, 'assets/donoti.png', circleIconSize, 'https://dorm.dongguk.ac.kr/'),
-                            _buildCircleItem(context, 'assets/uni.png', circleIconSize, null), // 단과대 아이콘은 클릭 기능 없음
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _buildCircleItem(context, 'assets/mnoti.png', circleIconSize, 'https://web.dongguk.ac.kr/article/servicenotice/list', true),
+                                _buildCircleItem(context, 'assets/donoti.png', circleIconSize, 'https://dorm.dongguk.ac.kr/'),
+                                _buildCircleItem(context, 'assets/uni.png', circleIconSize, null), // 단과대 아이콘은 클릭 기능 없음
+                              ],
+                            ),
+                            SizedBox(height: spacing),
+                            // 회색 사각형 추가 부분
+                            Container(
+                              width: constraints.maxWidth * 0.85,
+                              height: constraints.maxWidth * 0.6,
+                              decoration: BoxDecoration(
+                                color: Color(0xFFA0A0A0), // 색상을 원하는 컬러 코드로 변경
+                                borderRadius: BorderRadius.circular(15), // 모서리 둥글게 설정
+                              ),
+                            ),
                           ],
                         ),
                       ],
@@ -100,7 +114,12 @@ class MainScreen extends StatelessWidget {
   Widget _buildCircleItem(BuildContext context, String assetPath, double iconSize, String? url, [bool showHeader = false]) {
     return GestureDetector(
       onTap: () => _openWebView(context, url, showHeader),
-      child: Image.asset(assetPath, width: iconSize, height: iconSize),
+      child: Column(
+        children: [
+          Image.asset(assetPath, width: iconSize, height: iconSize),
+          SizedBox(height: iconSize * 0.1), // 원형 아이콘과 사각형 간의 간격
+        ],
+      ),
     );
   }
 
@@ -176,7 +195,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     backgroundColor: Color(0xFFF89805),
                     toolbarHeight: MediaQuery.of(context).size.height * 0.1,
                     title: Center(
-                      child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.06),
+                      child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.1),
                     ),
                     automaticallyImplyLeading: false,
                   ),
