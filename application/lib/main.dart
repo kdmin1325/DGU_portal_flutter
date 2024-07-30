@@ -67,10 +67,10 @@ class MainScreen extends StatelessWidget {
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           children: [
-                            _buildGridItem(context, 'assets/eclass.png', squareIconSize, 'https://eclass.dongguk.ac.kr/home/mainHome/Form/main'),
-                            _buildGridItem(context, 'assets/noti.png', squareIconSize, 'https://web.dongguk.ac.kr/article/generalnotice/list', true),
-                            _buildGridItem(context, 'assets/bus.png', squareIconSize, 'https://dongguk.unibus.kr/#/'),
-                            _buildGridItem(context, 'assets/scnoti.png', squareIconSize, 'https://web.dongguk.ac.kr/article/acdnotice/list', true),
+                            _buildGridItem(context, 'assets/eclass.png', squareIconSize, 'https://eclass.dongguk.ac.kr/home/mainHome/Form/main', true, false),
+                            _buildGridItem(context, 'assets/noti.png', squareIconSize, 'https://web.dongguk.ac.kr/article/generalnotice/list', false, true),
+                            _buildGridItem(context, 'assets/bus.png', squareIconSize, 'https://dongguk.unibus.kr/#/', true, false),
+                            _buildGridItem(context, 'assets/scnoti.png', squareIconSize, 'https://web.dongguk.ac.kr/article/acdnotice/list', false, true),
                           ],
                         ),
                         SizedBox(height: spacing),
@@ -79,8 +79,8 @@ class MainScreen extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                _buildCircleItem(context, 'assets/mnoti.png', circleIconSize, 'https://web.dongguk.ac.kr/article/servicenotice/list', true),
-                                _buildCircleItem(context, 'assets/donoti.png', circleIconSize, 'https://dorm.dongguk.ac.kr/'),
+                                _buildCircleItem(context, 'assets/mnoti.png', circleIconSize, 'https://web.dongguk.ac.kr/article/servicenotice/list', false, false),
+                                _buildCircleItem(context, 'assets/donoti.png', circleIconSize, 'https://dorm.dongguk.ac.kr/', false, false),
                                 _buildCircleItem(context, 'assets/uni.png', circleIconSize, null, false, true), // 단과대 아이콘은 새로운 화면으로 이동
                               ],
                             ),
@@ -107,18 +107,18 @@ class MainScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildGridItem(BuildContext context, String assetPath, double iconSize, String? url, [bool showHeader = false]) {
+  Widget _buildGridItem(BuildContext context, String assetPath, double iconSize, String? url, bool showHomeIcon, bool showHeader) {
     return GestureDetector(
-      onTap: () => _openWebView(context, url, showHeader),
+      onTap: () => _openWebView(context, url, showHomeIcon, showHeader),
       child: Center(
         child: Image.asset(assetPath, width: iconSize, height: iconSize),
       ),
     );
   }
 
-  Widget _buildCircleItem(BuildContext context, String assetPath, double iconSize, String? url, [bool showHeader = false, bool isUniIcon = false]) {
+  Widget _buildCircleItem(BuildContext context, String assetPath, double iconSize, String? url, bool showHomeIcon, bool isUniIcon) {
     return GestureDetector(
-      onTap: () => isUniIcon ? _openUniScreen(context) : _openWebView(context, url, showHeader),
+      onTap: () => isUniIcon ? _openUniScreen(context) : _openWebView(context, url, showHomeIcon, url == 'https://web.dongguk.ac.kr/article/generalnotice/list' || url == 'https://web.dongguk.ac.kr/article/acdnotice/list' || url == 'https://web.dongguk.ac.kr/article/servicenotice/list'),
       child: Column(
         children: [
           Image.asset(assetPath, width: iconSize, height: iconSize),
@@ -128,11 +128,11 @@ class MainScreen extends StatelessWidget {
     );
   }
 
-  void _openWebView(BuildContext context, String? url, bool showHeader) {
+  void _openWebView(BuildContext context, String? url, bool showHomeIcon, bool showHeader) {
     if (url != null) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => WebViewScreen(url: url, showHeader: showHeader)),
+        MaterialPageRoute(builder: (context) => WebViewScreen(url: url, showHomeIcon: showHomeIcon, showHeader: showHeader)),
       );
     } else {
       print('URL is null');
@@ -149,9 +149,10 @@ class MainScreen extends StatelessWidget {
 
 class WebViewScreen extends StatefulWidget {
   final String url;
+  final bool showHomeIcon;
   final bool showHeader;
 
-  WebViewScreen({required this.url, required this.showHeader});
+  WebViewScreen({required this.url, required this.showHomeIcon, required this.showHeader});
 
   @override
   _WebViewScreenState createState() => _WebViewScreenState();
@@ -198,35 +199,46 @@ class _WebViewScreenState extends State<WebViewScreen> {
       },
       child: Scaffold(
         body: SafeArea(
-          child: Column(
+          child: Stack(
             children: [
-              if (widget.showHeader)
-                PreferredSize(
-                  preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.1),
-                  child: AppBar(
-                    backgroundColor: Color(0xFFF89805),
-                    toolbarHeight: MediaQuery.of(context).size.height * 0.1,
-                    title: Center(
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.popUntil(context, (route) => route.isFirst);
-                        },
-                        child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.06),
-                      ),
-                    ),
-                    automaticallyImplyLeading: false,
+              WebViewWidget(
+                controller: _controller,
+              ),
+              if (_isLoading)
+                Center(child: CircularProgressIndicator()),
+              if (widget.showHomeIcon && (widget.url == 'https://eclass.dongguk.ac.kr/home/mainHome/Form/main' || widget.url == 'https://dongguk.unibus.kr/#/'))
+                Positioned(
+                  right: 20,
+                  bottom: 20,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.popUntil(context, (route) => route.isFirst);
+                    },
+                    child: Image.asset('assets/home.png', width: 50, height: 50),
                   ),
                 ),
-              Expanded(
-                child: Stack(
-                  children: [
-                    WebViewWidget(
-                      controller: _controller,
+              if (widget.showHeader)
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: PreferredSize(
+                    preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.1),
+                    child: AppBar(
+                      backgroundColor: Color(0xFFF89805),
+                      toolbarHeight: MediaQuery.of(context).size.height * 0.1,
+                      title: Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.popUntil(context, (route) => route.isFirst);
+                          },
+                          child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.06),
+                        ),
+                      ),
+                      automaticallyImplyLeading: false,
                     ),
-                    if (_isLoading) Center(child: CircularProgressIndicator()),
-                  ],
+                  ),
                 ),
-              ),
             ],
           ),
         ),
