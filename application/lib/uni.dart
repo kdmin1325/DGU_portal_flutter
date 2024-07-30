@@ -16,7 +16,12 @@ class UniScreen extends StatelessWidget {
                 backgroundColor: Color(0xFFF89805),
                 toolbarHeight: MediaQuery.of(context).size.height * 0.1,
                 title: Center(
-                  child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.06),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.popUntil(context, (route) => route.isFirst);
+                    },
+                    child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.06),
+                  ),
                 ),
                 automaticallyImplyLeading: false,
               ),
@@ -138,7 +143,12 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     backgroundColor: Color(0xFFF89805),
                     toolbarHeight: MediaQuery.of(context).size.height * 0.1,
                     title: Center(
-                      child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.06),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.popUntil(context, (route) => route.isFirst);
+                        },
+                        child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.06),
+                      ),
                     ),
                     automaticallyImplyLeading: false,
                   ),

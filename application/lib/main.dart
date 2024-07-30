@@ -37,7 +37,12 @@ class MainScreen extends StatelessWidget {
                 backgroundColor: Color(0xFFF89805),
                 toolbarHeight: MediaQuery.of(context).size.height * 0.1,
                 title: Center(
-                  child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.06),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.popUntil(context, (route) => route.isFirst);
+                    },
+                    child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.06),
+                  ),
                 ),
                 automaticallyImplyLeading: false,
               ),
@@ -80,13 +85,12 @@ class MainScreen extends StatelessWidget {
                               ],
                             ),
                             SizedBox(height: spacing),
-                            // 회색 사각형 추가 부분
                             Container(
                               width: constraints.maxWidth * 0.85,
                               height: constraints.maxWidth * 0.6,
                               decoration: BoxDecoration(
-                                color: Color(0xFFA0A0A0), // 색상을 원하는 컬러 코드로 변경
-                                borderRadius: BorderRadius.circular(15), // 모서리 둥글게 설정
+                                color: Color(0xFFA0A0A0),
+                                borderRadius: BorderRadius.circular(15),
                               ),
                             ),
                           ],
@@ -118,7 +122,7 @@ class MainScreen extends StatelessWidget {
       child: Column(
         children: [
           Image.asset(assetPath, width: iconSize, height: iconSize),
-          SizedBox(height: iconSize * 0.1), // 원형 아이콘과 사각형 간의 간격
+          SizedBox(height: iconSize * 0.1),
         ],
       ),
     );
@@ -203,7 +207,12 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     backgroundColor: Color(0xFFF89805),
                     toolbarHeight: MediaQuery.of(context).size.height * 0.1,
                     title: Center(
-                      child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.06),
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.popUntil(context, (route) => route.isFirst);
+                        },
+                        child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.06),
+                      ),
                     ),
                     automaticallyImplyLeading: false,
                   ),
