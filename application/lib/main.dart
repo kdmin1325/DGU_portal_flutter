@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'uni.dart';
 
 void main() {
   runApp(const MyApp());
@@ -75,7 +76,7 @@ class MainScreen extends StatelessWidget {
                               children: [
                                 _buildCircleItem(context, 'assets/mnoti.png', circleIconSize, 'https://web.dongguk.ac.kr/article/servicenotice/list', true),
                                 _buildCircleItem(context, 'assets/donoti.png', circleIconSize, 'https://dorm.dongguk.ac.kr/'),
-                                _buildCircleItem(context, 'assets/uni.png', circleIconSize, null), // 단과대 아이콘은 클릭 기능 없음
+                                _buildCircleItem(context, 'assets/uni.png', circleIconSize, null, false, true), // 단과대 아이콘은 새로운 화면으로 이동
                               ],
                             ),
                             SizedBox(height: spacing),
@@ -111,9 +112,9 @@ class MainScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildCircleItem(BuildContext context, String assetPath, double iconSize, String? url, [bool showHeader = false]) {
+  Widget _buildCircleItem(BuildContext context, String assetPath, double iconSize, String? url, [bool showHeader = false, bool isUniIcon = false]) {
     return GestureDetector(
-      onTap: () => _openWebView(context, url, showHeader),
+      onTap: () => isUniIcon ? _openUniScreen(context) : _openWebView(context, url, showHeader),
       child: Column(
         children: [
           Image.asset(assetPath, width: iconSize, height: iconSize),
@@ -132,6 +133,13 @@ class MainScreen extends StatelessWidget {
     } else {
       print('URL is null');
     }
+  }
+
+  void _openUniScreen(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => UniScreen()),
+    );
   }
 }
 
@@ -195,7 +203,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     backgroundColor: Color(0xFFF89805),
                     toolbarHeight: MediaQuery.of(context).size.height * 0.1,
                     title: Center(
-                      child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.1),
+                      child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.06),
                     ),
                     automaticallyImplyLeading: false,
                   ),
