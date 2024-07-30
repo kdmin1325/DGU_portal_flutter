@@ -35,13 +35,13 @@ class MainScreen extends StatelessWidget {
               preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.1),
               child: AppBar(
                 backgroundColor: Color(0xFFF89805),
-                toolbarHeight: MediaQuery.of(context).size.height * 0.1,
+                toolbarHeight: MediaQuery.of(context).size.height * 0.14,
                 title: Center(
                   child: GestureDetector(
                     onTap: () {
                       Navigator.popUntil(context, (route) => route.isFirst);
                     },
-                    child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.06),
+                    child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.07),
                   ),
                 ),
                 automaticallyImplyLeading: false,
@@ -214,7 +214,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     onTap: () {
                       Navigator.popUntil(context, (route) => route.isFirst);
                     },
-                    child: Image.asset('assets/home.png', width: 50, height: 50),
+                    child: Image.asset('assets/home.png', width: 70, height: 70),
                   ),
                 ),
               if (widget.showHeader)
@@ -226,13 +226,13 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.1),
                     child: AppBar(
                       backgroundColor: Color(0xFFF89805),
-                      toolbarHeight: MediaQuery.of(context).size.height * 0.1,
+                      toolbarHeight: MediaQuery.of(context).size.height * 0.14,
                       title: Center(
                         child: GestureDetector(
                           onTap: () {
                             Navigator.popUntil(context, (route) => route.isFirst);
                           },
-                          child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.06),
+                          child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.07),
                         ),
                       ),
                       automaticallyImplyLeading: false,
