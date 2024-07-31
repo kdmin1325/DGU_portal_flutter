@@ -32,22 +32,46 @@ class UniScreen extends StatelessWidget {
                   double squareIconSizeFactor = 0.4;
                   double squareIconSize = constraints.maxWidth * squareIconSizeFactor;
                   double spacing = constraints.maxWidth * 0.04;
-
+                  double wideIconHeight = squareIconSize * 0.5;
                   return Padding(
                     padding: EdgeInsets.all(spacing),
                     child: ListView(
                       children: [
-                        GridView.count(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: spacing,
-                          mainAxisSpacing: spacing,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
+                        Column(
                           children: [
-                            _buildGridItem(context, 'assets/en_uni.png', squareIconSize, 'https://infocom.dongguk.ac.kr/', true),
-                            _buildGridItem(context, 'assets/book_uni.png', squareIconSize, 'https://coreanwr.dongguk.ac.kr/', true),
-                            _buildGridItem(context, 'assets/nu_uni.png', squareIconSize, 'https://nursing.dongguk.ac.kr/', true),
-                            _buildGridItem(context, 'assets/bot_uni.png', squareIconSize, 'https://buddhist.dongguk.ac.kr/', true),
+                            GridView.count(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: spacing,
+                              mainAxisSpacing: spacing,
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              children: [
+                                _buildGridItem(context, 'assets/en_uni.png', squareIconSize, 'https://infocom.dongguk.ac.kr/'),
+                                _buildGridItem(context, 'assets/book_uni.png', squareIconSize, 'https://coreanwr.dongguk.ac.kr/'),
+                                _buildGridItem(context, 'assets/nu_uni.png', squareIconSize, 'https://nursing.dongguk.ac.kr/'),
+                                _buildGridItem(context, 'assets/bot_uni.png', squareIconSize, 'https://buddhist.dongguk.ac.kr/'),
+                              ],
+                            ),
+                            SizedBox(height: spacing),
+                            _buildWideItem(context, 'assets/computer.png', wideIconHeight, 'https://ce.dongguk.ac.kr/'),
+                            SizedBox(height: spacing),
+                            GridView.count(
+                              crossAxisCount: 4,
+                              crossAxisSpacing: spacing,
+                              mainAxisSpacing: spacing,
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              children: [
+                                _buildGridItem(context, 'assets/hotel_cook.png', squareIconSize / 2, 'https://food.dongguk.ac.kr/'),
+                                _buildGridItem(context, 'assets/hotel_hotel.png', squareIconSize / 2, 'https://travel.dongguk.ac.kr/HOME/travel/index.htm'),
+                                _buildGridItem(context, 'assets/pol.png', squareIconSize / 2, 'https://police.dongguk.ac.kr/'),
+                                _buildGridItem(context, 'assets/air.png', squareIconSize / 2, 'https://airtrade.dongguk.ac.kr/'),
+                                _buildGridItem(context, 'assets/eco.png', squareIconSize / 2, 'https://mgt.dongguk.ac.kr/'),
+                                _buildGridItem(context, 'assets/frame.png', squareIconSize / 2, 'https://openmajor.dongguk.ac.kr/'),
+                                _buildGridItem(context, 'assets/k_medi.png', squareIconSize / 2, 'https://orient.dongguk.ac.kr/'),
+                                _buildGridItem(context, 'assets/medi.png', squareIconSize / 2, 'https://med.dongguk.ac.kr/'),
+                              ],
+                            ),
                           ],
                         ),
                       ],
@@ -62,20 +86,29 @@ class UniScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildGridItem(BuildContext context, String assetPath, double iconSize, String? url, [bool showHeader = false]) {
+  Widget _buildGridItem(BuildContext context, String assetPath, double iconSize, String? url) {
     return GestureDetector(
-      onTap: () => _openWebView(context, url, showHeader),
+      onTap: () => _openWebView(context, url),
       child: Center(
         child: Image.asset(assetPath, width: iconSize, height: iconSize),
       ),
     );
   }
 
-  void _openWebView(BuildContext context, String? url, bool showHeader) {
+  Widget _buildWideItem(BuildContext context, String assetPath, double iconHeight, String? url) {
+    return GestureDetector(
+      onTap: () => _openWebView(context, url),
+      child: Center(
+        child: Image.asset(assetPath, height: iconHeight),
+      ),
+    );
+  }
+
+  void _openWebView(BuildContext context, String? url) {
     if (url != null) {
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => WebViewScreen(url: url, showHeader: showHeader)),
+        MaterialPageRoute(builder: (context) => WebViewScreen(url: url)),
       );
     } else {
       print('URL is null');
@@ -85,9 +118,8 @@ class UniScreen extends StatelessWidget {
 
 class WebViewScreen extends StatefulWidget {
   final String url;
-  final bool showHeader;
 
-  WebViewScreen({required this.url, required this.showHeader});
+  WebViewScreen({required this.url});
 
   @override
   _WebViewScreenState createState() => _WebViewScreenState();
@@ -134,35 +166,12 @@ class _WebViewScreenState extends State<WebViewScreen> {
       },
       child: Scaffold(
         body: SafeArea(
-          child: Column(
+          child: Stack(
             children: [
-              if (widget.showHeader)
-                PreferredSize(
-                  preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.1),
-                  child: AppBar(
-                    backgroundColor: Color(0xFFF89805),
-                    toolbarHeight: MediaQuery.of(context).size.height * 0.1,
-                    title: Center(
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.popUntil(context, (route) => route.isFirst);
-                        },
-                        child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.06),
-                      ),
-                    ),
-                    automaticallyImplyLeading: false,
-                  ),
-                ),
-              Expanded(
-                child: Stack(
-                  children: [
-                    WebViewWidget(
-                      controller: _controller,
-                    ),
-                    if (_isLoading) Center(child: CircularProgressIndicator()),
-                  ],
-                ),
+              WebViewWidget(
+                controller: _controller,
               ),
+              if (_isLoading) Center(child: CircularProgressIndicator()),
             ],
           ),
         ),
