@@ -171,7 +171,18 @@ class _WebViewScreenState extends State<WebViewScreen> {
               WebViewWidget(
                 controller: _controller,
               ),
-              if (_isLoading) Center(child: CircularProgressIndicator()),
+              if (_isLoading)
+                Center(child: CircularProgressIndicator()),
+              Positioned(
+                right: 20,
+                bottom: 20,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.popUntil(context, (route) => route.isFirst);
+                  },
+                  child: Image.asset('assets/home.png', width: 70, height: 70),
+                ),
+              ),
             ],
           ),
         ),
