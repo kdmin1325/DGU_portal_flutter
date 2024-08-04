@@ -35,7 +35,7 @@ class MainScreen extends StatelessWidget {
               preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.1),
               child: AppBar(
                 backgroundColor: Color(0xFFF89805),
-                toolbarHeight: MediaQuery.of(context).size.height * 0.12,
+                toolbarHeight: MediaQuery.of(context).size.height * 0.10,
                 title: Center(
                   child: GestureDetector(
                     onTap: () {
