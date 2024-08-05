@@ -89,7 +89,7 @@ class MainScreen extends StatelessWidget {
                               width: constraints.maxWidth * 0.85,
                               height: constraints.maxWidth * 0.6,
                               decoration: BoxDecoration(
-                                color: Color(0xFFA0A0A0),
+                                color: Color(0xFFE2E2E2),
                                 borderRadius: BorderRadius.circular(15),
                               ),
                             ),
