@@ -31,8 +31,9 @@ class UniScreen extends StatelessWidget {
                 builder: (context, constraints) {
                   double squareIconSizeFactor = 0.4;
                   double squareIconSize = constraints.maxWidth * squareIconSizeFactor;
-                  double spacing = constraints.maxWidth * 0.04;
+                  double spacing = constraints.maxWidth * 0.05;
                   double wideIconHeight = squareIconSize * 0.5;
+
                   return Padding(
                     padding: EdgeInsets.all(spacing),
                     child: ListView(
@@ -42,7 +43,7 @@ class UniScreen extends StatelessWidget {
                             GridView.count(
                               crossAxisCount: 2,
                               crossAxisSpacing: spacing,
-                              mainAxisSpacing: spacing,
+                              mainAxisSpacing: spacing * 0.6,
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               children: [
@@ -52,13 +53,13 @@ class UniScreen extends StatelessWidget {
                                 _buildGridItem(context, 'assets/bot_uni.png', squareIconSize, 'https://buddhist.dongguk.ac.kr/'),
                               ],
                             ),
-                            SizedBox(height: spacing),
+                            SizedBox(height: spacing * 0.4),
                             _buildWideItem(context, 'assets/computer.png', wideIconHeight, 'https://ce.dongguk.ac.kr/'),
-                            SizedBox(height: spacing),
+                            SizedBox(height: spacing * 0.6),
                             GridView.count(
                               crossAxisCount: 4,
                               crossAxisSpacing: spacing,
-                              mainAxisSpacing: spacing,
+                              mainAxisSpacing: spacing * 1.3,
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               children: [
