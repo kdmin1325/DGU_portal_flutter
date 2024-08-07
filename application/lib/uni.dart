@@ -43,7 +43,7 @@ class UniScreen extends StatelessWidget {
                             GridView.count(
                               crossAxisCount: 2,
                               crossAxisSpacing: spacing,
-                              mainAxisSpacing: spacing * 0.6,
+                              mainAxisSpacing: spacing * 0.3,
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               children: [
@@ -53,7 +53,7 @@ class UniScreen extends StatelessWidget {
                                 _buildGridItem(context, 'assets/bot_uni.png', squareIconSize, 'https://buddhist.dongguk.ac.kr/'),
                               ],
                             ),
-                            SizedBox(height: spacing * 0.4),
+                            SizedBox(height: spacing * 0.3),
                             _buildWideItem(context, 'assets/computer.png', wideIconHeight, 'https://ce.dongguk.ac.kr/'),
                             SizedBox(height: spacing * 0.6),
                             GridView.count(

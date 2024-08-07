@@ -63,7 +63,7 @@ class MainScreen extends StatelessWidget {
                         GridView.count(
                           crossAxisCount: 2,
                           crossAxisSpacing: spacing,
-                          mainAxisSpacing: spacing * 0.5, // 사각 아이콘들 사이의 위아래 간격을 줄임
+                          mainAxisSpacing: spacing * 0.3, // 사각 아이콘들 사이의 위아래 간격을 줄임
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           children: [
@@ -73,7 +73,7 @@ class MainScreen extends StatelessWidget {
                             _buildGridItem(context, 'assets/scnoti.png', squareIconSize, 'https://web.dongguk.ac.kr/article/acdnotice/list', false, true),
                           ],
                         ),
-                        SizedBox(height: spacing * 0.6), // 사각 아이콘과 원형 아이콘 사이의 간격을 줄임
+                        SizedBox(height: spacing * 0.5), // 사각 아이콘과 원형 아이콘 사이의 간격을 줄임
                         Column(
                           children: [
                             Row(
@@ -84,7 +84,7 @@ class MainScreen extends StatelessWidget {
                                 _buildCircleItem(context, 'assets/uni.png', circleIconSize, null, false, true), // 단과대 아이콘은 새로운 화면으로 이동
                               ],
                             ),
-                            SizedBox(height: spacing * 0.6), // 원형 아이콘 아래의 간격을 줄임
+                            SizedBox(height: spacing * 0.5), // 원형 아이콘 아래의 간격을 줄임
                             Container(
                               width: constraints.maxWidth * 0.85,
                               height: constraints.maxWidth * 0.6,
