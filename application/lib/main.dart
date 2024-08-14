@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'uni.dart';
 
 void main() {
@@ -24,7 +25,34 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MainScreen extends StatelessWidget {
+class MainScreen extends StatefulWidget {
+  @override
+  _MainScreenState createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  String _apiStatusMessage = 'Checking API status...';
+
+  @override
+  void initState() {
+    super.initState();
+    _checkApiStatus();
+  }
+
+  Future<void> _checkApiStatus() async {
+    final url = 'http://a9b8c7d6e5f4g3h2i1j0klmnopqrst.ap-northeast-2.elasticbeanstalk.com';
+    try {
+      final response = await http.get(Uri.parse(url));
+      setState(() {
+        _apiStatusMessage = response.body;
+      });
+    } catch (e) {
+      setState(() {
+        _apiStatusMessage = 'Error connecting to API: $e';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,7 +82,7 @@ class MainScreen extends StatelessWidget {
                   double circleIconSizeFactor = 0.3;
                   double squareIconSize = constraints.maxWidth * squareIconSizeFactor;
                   double circleIconSize = constraints.maxWidth * circleIconSizeFactor;
-                  double spacing = constraints.maxWidth * 0.05; // 기본 간격 비율
+                  double spacing = constraints.maxWidth * 0.05;
 
                   return Padding(
                     padding: EdgeInsets.all(spacing),
@@ -63,7 +91,7 @@ class MainScreen extends StatelessWidget {
                         GridView.count(
                           crossAxisCount: 2,
                           crossAxisSpacing: spacing,
-                          mainAxisSpacing: spacing * 0.3, // 사각 아이콘들 사이의 위아래 간격을 줄임
+                          mainAxisSpacing: spacing * 0.3,
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           children: [
@@ -73,7 +101,7 @@ class MainScreen extends StatelessWidget {
                             _buildGridItem(context, 'assets/scnoti.png', squareIconSize, 'https://web.dongguk.ac.kr/article/acdnotice/list', false, true),
                           ],
                         ),
-                        SizedBox(height: spacing * 0.5), // 사각 아이콘과 원형 아이콘 사이의 간격을 줄임
+                        SizedBox(height: spacing * 0.5),
                         Column(
                           children: [
                             Row(
@@ -81,16 +109,23 @@ class MainScreen extends StatelessWidget {
                               children: [
                                 _buildCircleItem(context, 'assets/mnoti.png', circleIconSize, 'https://web.dongguk.ac.kr/article/servicenotice/list', false, false),
                                 _buildCircleItem(context, 'assets/donoti.png', circleIconSize, 'https://dorm.dongguk.ac.kr/', true, false),
-                                _buildCircleItem(context, 'assets/uni.png', circleIconSize, null, false, true), // 단과대 아이콘은 새로운 화면으로 이동
+                                _buildCircleItem(context, 'assets/uni.png', circleIconSize, null, false, true),
                               ],
                             ),
-                            SizedBox(height: spacing * 0.5), // 원형 아이콘 아래의 간격을 줄임
+                            SizedBox(height: spacing * 0.5),
                             Container(
                               width: constraints.maxWidth * 0.85,
                               height: constraints.maxWidth * 0.6,
                               decoration: BoxDecoration(
                                 color: Color(0xFFE2E2E2),
                                 borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  _apiStatusMessage,
+                                  style: TextStyle(fontSize: 18),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
                             ),
                           ],
@@ -122,7 +157,7 @@ class MainScreen extends StatelessWidget {
       child: Column(
         children: [
           Image.asset(assetPath, width: iconSize, height: iconSize),
-          SizedBox(height: iconSize * 0.06), // 원형 아이콘 아래의 간격을 줄임
+          SizedBox(height: iconSize * 0.06),
         ],
       ),
     );
@@ -135,7 +170,13 @@ class MainScreen extends StatelessWidget {
       }
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => WebViewScreen(url: url, showHomeIcon: showHomeIcon, showHeader: showHeader)),
+        MaterialPageRoute(
+          builder: (context) => WebViewScreen(
+            url: url,
+            showHomeIcon: showHomeIcon,
+            showHeader: showHeader,
+          ),
+        ),
       );
     } else {
       print('URL is null');
@@ -155,7 +196,11 @@ class WebViewScreen extends StatefulWidget {
   final bool showHomeIcon;
   final bool showHeader;
 
-  WebViewScreen({required this.url, required this.showHomeIcon, required this.showHeader});
+  WebViewScreen({
+    required this.url,
+    this.showHomeIcon = false,
+    this.showHeader = true,
+  });
 
   @override
   _WebViewScreenState createState() => _WebViewScreenState();
@@ -209,15 +254,15 @@ class _WebViewScreenState extends State<WebViewScreen> {
               ),
               if (_isLoading)
                 Center(child: CircularProgressIndicator()),
-              if (widget.showHomeIcon && (widget.url == 'https://eclass.dongguk.ac.kr/home/mainHome/Form/main' || widget.url == 'https://dongguk.unibus.kr/#/' || widget.url == 'https://dorm.dongguk.ac.kr/'))
+              if (widget.showHomeIcon && (widget.url == 'https://eclass.dongguk.ac.kr/home/mainHome/Form/main' || widget.url == 'https://dongguk.unibus.kr/#/'))
                 Positioned(
-                  right: 20,
-                  bottom: 20,
-                  child: GestureDetector(
-                    onTap: () {
+                  left: 16,
+                  top: 16,
+                  child: IconButton(
+                    icon: Icon(Icons.home),
+                    onPressed: () {
                       Navigator.popUntil(context, (route) => route.isFirst);
                     },
-                    child: Image.asset('assets/home.png', width: 70, height: 70),
                   ),
                 ),
               if (widget.showHeader && widget.url != 'https://dorm.dongguk.ac.kr/')
@@ -225,20 +270,13 @@ class _WebViewScreenState extends State<WebViewScreen> {
                   top: 0,
                   left: 0,
                   right: 0,
-                  child: PreferredSize(
-                    preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.1),
-                    child: AppBar(
-                      backgroundColor: Color(0xFFF89805),
-                      toolbarHeight: MediaQuery.of(context).size.height * 0.12,
-                      title: Center(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.popUntil(context, (route) => route.isFirst);
-                          },
-                          child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.06),
-                        ),
-                      ),
-                      automaticallyImplyLeading: false,
+                  child: Container(
+                    color: Colors.blue,
+                    padding: EdgeInsets.all(16),
+                    child: Text(
+                      "Header",
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),
