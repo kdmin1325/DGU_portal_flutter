@@ -153,7 +153,7 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget _buildCircleItem(BuildContext context, String assetPath, double iconSize, String? url, bool showHomeIcon, bool isUniIcon) {
     return GestureDetector(
-      onTap: () => isUniIcon ? _openUniScreen(context) : _openWebView(context, url, showHomeIcon, url == 'https://web.dongguk.ac.kr/article/generalnotice/list' || url == 'https://web.dongguk.ac.kr/article/acdnotice/list' || url == 'https://web.dongguk.ac.kr/article/servicenotice/list' || url == 'https://dorm.dongguk.ac.kr/'),
+      onTap: () => isUniIcon ? _openUniScreen(context) : _openWebView(context, url, showHomeIcon, url == 'https://web.dongguk.ac.kr/article/generalnotice/list' || url == 'https://web.dongguk.ac.kr/article/acdnotice/list' || url == 'https://web.dongguk.ac.kr/article/servicenotice/list'),
       child: Column(
         children: [
           Image.asset(assetPath, width: iconSize, height: iconSize),
@@ -165,9 +165,6 @@ class _MainScreenState extends State<MainScreen> {
 
   void _openWebView(BuildContext context, String? url, bool showHomeIcon, bool showHeader) {
     if (url != null) {
-      if (url == 'https://dorm.dongguk.ac.kr/') {
-        showHeader = false;
-      }
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -254,29 +251,36 @@ class _WebViewScreenState extends State<WebViewScreen> {
               ),
               if (_isLoading)
                 Center(child: CircularProgressIndicator()),
-              if (widget.showHomeIcon && (widget.url == 'https://eclass.dongguk.ac.kr/home/mainHome/Form/main' || widget.url == 'https://dongguk.unibus.kr/#/'))
+              if (widget.showHomeIcon)
                 Positioned(
-                  left: 16,
-                  top: 16,
-                  child: IconButton(
-                    icon: Icon(Icons.home),
-                    onPressed: () {
+                  right: 20,
+                  bottom: 20,
+                  child: GestureDetector(
+                    onTap: () {
                       Navigator.popUntil(context, (route) => route.isFirst);
                     },
+                    child: Image.asset('assets/home.png', width: 70, height: 70),
                   ),
                 ),
-              if (widget.showHeader && widget.url != 'https://dorm.dongguk.ac.kr/')
+              if (_shouldShowHeader())
                 Positioned(
                   top: 0,
                   left: 0,
                   right: 0,
-                  child: Container(
-                    color: Colors.blue,
-                    padding: EdgeInsets.all(16),
-                    child: Text(
-                      "Header",
-                      style: TextStyle(color: Colors.white, fontSize: 20),
-                      textAlign: TextAlign.center,
+                  child: PreferredSize(
+                    preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.1),
+                    child: AppBar(
+                      backgroundColor: Color(0xFFF89805),
+                      toolbarHeight: MediaQuery.of(context).size.height * 0.12,
+                      title: Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.popUntil(context, (route) => route.isFirst);
+                          },
+                          child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.06),
+                        ),
+                      ),
+                      automaticallyImplyLeading: false,
                     ),
                   ),
                 ),
@@ -285,5 +289,15 @@ class _WebViewScreenState extends State<WebViewScreen> {
         ),
       ),
     );
+  }
+
+  bool _shouldShowHeader() {
+    final headerUrls = [
+      'https://web.dongguk.ac.kr/article/generalnotice/list',
+      'https://web.dongguk.ac.kr/article/acdnotice/list',
+      'https://web.dongguk.ac.kr/article/servicenotice/list',
+    ];
+
+    return headerUrls.contains(widget.url);
   }
 }
