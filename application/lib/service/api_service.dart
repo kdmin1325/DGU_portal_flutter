@@ -6,6 +6,6 @@ Future<String> fetchApiStatus() async {
     final response = await http.get(Uri.parse(url));
     return response.body;
   } catch (e) {
-    return 'Error connecting to API: $e';
+    return '인터넷 연결이 없습니다';
   }
 }
