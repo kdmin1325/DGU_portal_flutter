@@ -1,8 +1,11 @@
+import 'package:application/utils/img_assets.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'uni.dart';
+import '../service/api_service.dart';
+import '../utils/img_assets.dart';
 
 void main() {
   runApp(const MyApp());
@@ -40,17 +43,10 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> _checkApiStatus() async {
-    final url = 'http://a9b8c7d6e5f4g3h2i1j0klmnopqrst.ap-northeast-2.elasticbeanstalk.com';
-    try {
-      final response = await http.get(Uri.parse(url));
-      setState(() {
-        _apiStatusMessage = response.body;
-      });
-    } catch (e) {
-      setState(() {
-        _apiStatusMessage = 'Error connecting to API: $e';
-      });
-    }
+    final status = await fetchApiStatus();
+    setState(() {
+      _apiStatusMessage = status;
+    });
   }
 
   @override
@@ -69,7 +65,7 @@ class _MainScreenState extends State<MainScreen> {
                     onTap: () {
                       Navigator.popUntil(context, (route) => route.isFirst);
                     },
-                    child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.06),
+                    child: Image.asset(ImageAssets.dgumain, height: MediaQuery.of(context).size.height * 0.06),
                   ),
                 ),
                 automaticallyImplyLeading: false,
@@ -95,10 +91,10 @@ class _MainScreenState extends State<MainScreen> {
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           children: [
-                            _buildGridItem(context, 'assets/eclass.png', squareIconSize, 'https://eclass.dongguk.ac.kr/home/mainHome/Form/main', true, false),
-                            _buildGridItem(context, 'assets/noti.png', squareIconSize, 'https://web.dongguk.ac.kr/article/generalnotice/list', false, true),
-                            _buildGridItem(context, 'assets/bus.png', squareIconSize, 'https://dongguk.unibus.kr/#/', true, false),
-                            _buildGridItem(context, 'assets/scnoti.png', squareIconSize, 'https://web.dongguk.ac.kr/article/acdnotice/list', false, true),
+                            _buildGridItem(context, ImageAssets.eclass, squareIconSize, 'https://eclass.dongguk.ac.kr/home/mainHome/Form/main', true, false),
+                            _buildGridItem(context, ImageAssets.noti, squareIconSize, 'https://web.dongguk.ac.kr/article/generalnotice/list', false, true),
+                            _buildGridItem(context, ImageAssets.bus, squareIconSize, 'https://dongguk.unibus.kr/#/', true, false),
+                            _buildGridItem(context, ImageAssets.scnoti, squareIconSize, 'https://web.dongguk.ac.kr/article/acdnotice/list', false, true),
                           ],
                         ),
                         SizedBox(height: spacing * 0.5),
@@ -107,9 +103,9 @@ class _MainScreenState extends State<MainScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                _buildCircleItem(context, 'assets/mnoti.png', circleIconSize, 'https://web.dongguk.ac.kr/article/servicenotice/list', false, false),
-                                _buildCircleItem(context, 'assets/donoti.png', circleIconSize, 'https://dorm.dongguk.ac.kr/', true, false),
-                                _buildCircleItem(context, 'assets/uni.png', circleIconSize, null, false, true),
+                                _buildCircleItem(context, ImageAssets.mnoti, circleIconSize, 'https://web.dongguk.ac.kr/article/servicenotice/list', false, false),
+                                _buildCircleItem(context, ImageAssets.donoti, circleIconSize, 'https://dorm.dongguk.ac.kr/', true, false),
+                                _buildCircleItem(context, ImageAssets.uni, circleIconSize, null, false, true),
                               ],
                             ),
                             SizedBox(height: spacing * 0.5),
