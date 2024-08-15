@@ -111,7 +111,7 @@ class _MainScreenState extends State<MainScreen> {
                             SizedBox(height: spacing * 0.5),
                             Container(
                               width: constraints.maxWidth * 0.85,
-                              height: constraints.maxWidth * 0.6,
+                              height: constraints.maxWidth * 0.45,
                               decoration: BoxDecoration(
                                 color: Color(0xFFE2E2E2),
                                 borderRadius: BorderRadius.circular(15),
