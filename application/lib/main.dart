@@ -94,7 +94,7 @@ class _MainScreenState extends State<MainScreen> {
                             _buildGridItem(context, ImageAssets.eclass, squareIconSize, 'https://eclass.dongguk.ac.kr/home/mainHome/Form/main', true, false),
                             _buildGridItem(context, ImageAssets.noti, squareIconSize, 'https://web.dongguk.ac.kr/article/generalnotice/list', false, true),
                             _buildGridItem(context, ImageAssets.bus, squareIconSize, 'https://dongguk.unibus.kr/#/', true, false),
-                            _buildGridItem(context, ImageAssets.scnoti, squareIconSize, 'https://web.dongguk.ac.kr/article/acdnotice/list', false, true),
+                            _buildGridItem(context, ImageAssets.mdrims, squareIconSize, 'https://web.dongguk.ac.kr/article/acdnotice/list', false, true),
                           ],
                         ),
                         SizedBox(height: spacing * 0.5),
