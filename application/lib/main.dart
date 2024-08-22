@@ -2,7 +2,6 @@ import 'package:application/utils/img_assets.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:http/http.dart' as http;
 import 'uni.dart';
 import '../service/api_service.dart';
 import '../utils/img_assets.dart';
@@ -34,7 +33,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  String _apiStatusMessage = 'Checking API status...';
+  String _apiStatusMessage = '연결 중...';
 
   @override
   void initState() {
@@ -43,7 +42,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> _checkApiStatus() async {
-    final status = await fetchApiStatus();
+    final status = await ApiService.fetchApiStatus();
     setState(() {
       _apiStatusMessage = status;
     });
@@ -94,7 +93,7 @@ class _MainScreenState extends State<MainScreen> {
                             _buildGridItem(context, ImageAssets.eclass, squareIconSize, 'https://eclass.dongguk.ac.kr/home/mainHome/Form/main', true, false),
                             _buildGridItem(context, ImageAssets.noti, squareIconSize, 'https://web.dongguk.ac.kr/article/generalnotice/list', false, true),
                             _buildGridItem(context, ImageAssets.bus, squareIconSize, 'https://dongguk.unibus.kr/#/', true, false),
-                            _buildGridItem(context, ImageAssets.mdrims, squareIconSize, 'https://web.dongguk.ac.kr/article/acdnotice/list', false, true),
+                            _buildGridItem(context, ImageAssets.ndrims, squareIconSize, 'https://ndrims.dongguk.ac.kr/unis/index.do', false, true),
                           ],
                         ),
                         SizedBox(height: spacing * 0.5),
@@ -138,7 +137,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget _buildGridItem(BuildContext context, String assetPath, double iconSize, String? url, bool showHomeIcon, bool showHeader) {
+  Widget _buildGridItem(BuildContext context, String assetPath, double iconSize, String? url, bool? showHomeIcon, bool? showHeader) {
     return GestureDetector(
       onTap: () => _openWebView(context, url, showHomeIcon, showHeader),
       child: Center(
@@ -147,7 +146,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget _buildCircleItem(BuildContext context, String assetPath, double iconSize, String? url, bool showHomeIcon, bool isUniIcon) {
+  Widget _buildCircleItem(BuildContext context, String assetPath, double iconSize, String? url, bool? showHomeIcon, bool isUniIcon) {
     return GestureDetector(
       onTap: () => isUniIcon ? _openUniScreen(context) : _openWebView(context, url, showHomeIcon, url == 'https://web.dongguk.ac.kr/article/generalnotice/list' || url == 'https://web.dongguk.ac.kr/article/acdnotice/list' || url == 'https://web.dongguk.ac.kr/article/servicenotice/list'),
       child: Column(
@@ -159,15 +158,19 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  void _openWebView(BuildContext context, String? url, bool showHomeIcon, bool showHeader) {
+  void _openWebView(BuildContext context, String? url, bool? showHomeIcon, bool? showHeader) {
+    // null safety를 고려하여 기본값 설정
+    final bool showHomeIconSafe = showHomeIcon ?? false;
+    final bool showHeaderSafe = showHeader ?? true;
+
     if (url != null) {
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => WebViewScreen(
             url: url,
-            showHomeIcon: showHomeIcon,
-            showHeader: showHeader,
+            showHomeIcon: showHomeIconSafe,
+            showHeader: showHeaderSafe,
           ),
         ),
       );
@@ -191,8 +194,8 @@ class WebViewScreen extends StatefulWidget {
 
   WebViewScreen({
     required this.url,
-    this.showHomeIcon = false,
-    this.showHeader = true,
+    this.showHomeIcon = false,  // 기본값 설정
+    this.showHeader = true,     // 기본값 설정
   });
 
   @override
@@ -255,10 +258,10 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     onTap: () {
                       Navigator.popUntil(context, (route) => route.isFirst);
                     },
-                    child: Image.asset('assets/home.png', width: 70, height: 70),
+                    child: Image.asset(ImageAssets.home, width: 70, height: 70),
                   ),
                 ),
-              if (_shouldShowHeader())
+              if (widget.showHeader)
                 Positioned(
                   top: 0,
                   left: 0,
@@ -273,7 +276,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                           onTap: () {
                             Navigator.popUntil(context, (route) => route.isFirst);
                           },
-                          child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.06),
+                          child: Image.asset(ImageAssets.dgumain, height: MediaQuery.of(context).size.height * 0.06),
                         ),
                       ),
                       automaticallyImplyLeading: false,
@@ -285,15 +288,5 @@ class _WebViewScreenState extends State<WebViewScreen> {
         ),
       ),
     );
-  }
-
-  bool _shouldShowHeader() {
-    final headerUrls = [
-      'https://web.dongguk.ac.kr/article/generalnotice/list',
-      'https://web.dongguk.ac.kr/article/acdnotice/list',
-      'https://web.dongguk.ac.kr/article/servicenotice/list',
-    ];
-
-    return headerUrls.contains(widget.url);
   }
 }
