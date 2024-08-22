@@ -38,11 +38,16 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    _checkApiStatus();
+    _checkApiStatus();  // static 메서드를 호출하는 방식으로 변경
   }
 
-  Future<void> _checkApiStatus() async {
-    final status = await ApiService.fetchApiStatus();
+  // static 메서드를 사용하여 API 상태를 확인
+  void _checkApiStatus() {
+    _fetchApiStatus();
+  }
+
+  Future<void> _fetchApiStatus() async {
+    final status = await ApiService.fetchApiStatus();  // static 메서드 호출
     setState(() {
       _apiStatusMessage = status;
     });
@@ -159,7 +164,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _openWebView(BuildContext context, String? url, bool? showHomeIcon, bool? showHeader) {
-    // null safety를 고려하여 기본값 설정
     final bool showHomeIconSafe = showHomeIcon ?? false;
     final bool showHeaderSafe = showHeader ?? true;
 
@@ -194,8 +198,8 @@ class WebViewScreen extends StatefulWidget {
 
   WebViewScreen({
     required this.url,
-    this.showHomeIcon = false,  // 기본값 설정
-    this.showHeader = true,     // 기본값 설정
+    this.showHomeIcon = false,
+    this.showHeader = true,
   });
 
   @override
