@@ -15,7 +15,6 @@ class ApiService {
 
       var jsonResponse = response.data;
 
-      // 응답이 리스트 내 리스트일 경우 처리
       if (jsonResponse is List) {
         StringBuffer output = StringBuffer();
 
@@ -32,7 +31,7 @@ class ApiService {
       return '데이터 형식이 올바르지 않습니다.';
 
     } catch (e) {
-      print('Error occurred: $e');
+      print('Error occurred: $e'); // 에러일 경우 에러 코드 확인
       return '인터넷 연결이 없습니다.';
     }
   }
