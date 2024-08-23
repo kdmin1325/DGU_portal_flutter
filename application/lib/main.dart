@@ -121,11 +121,18 @@ class _MainScreenState extends State<MainScreen> {
                                 color: Color(0xFFE2E2E2),
                                 borderRadius: BorderRadius.circular(15),
                               ),
-                              child: Center(
-                                child: Text(
-                                  _apiStatusMessage,
-                                  style: TextStyle(fontSize: 18),
-                                  textAlign: TextAlign.center,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16.0), // 좌우 패딩ㅣ 추가
+                                child: Column(
+                                  children: [
+                                    Spacer(),
+                                    Text(
+                                      _apiStatusMessage,
+                                      style: TextStyle(fontSize: 18),
+                                      textAlign: TextAlign.left, // 왼쪽 정렬
+                                    ),
+                                    SizedBox(height: 16), // 아래쪽에 약간의 공간 추가
+                                  ],
                                 ),
                               ),
                             ),
