@@ -1,8 +1,9 @@
 import 'package:dio/dio.dart';
+import '../utils/urls.dart';
 
 class ApiService {
   static final Dio _dio = Dio(BaseOptions(
-    baseUrl: 'http://a9b8c7d6e5f4g3h2i1j0klmnopqrst.ap-northeast-2.elasticbeanstalk.com/',
+    baseUrl: Urls.SERVERIP,
     connectTimeout: Duration(milliseconds: 5000),
     receiveTimeout: Duration(milliseconds: 3000),
   ));
