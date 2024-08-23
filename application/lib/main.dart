@@ -122,8 +122,9 @@ class _MainScreenState extends State<MainScreen> {
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16.0), // 좌우 패딩을 추가
+                                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0), // 좌우 및 상하 패딩 추가
                                 child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start, // 텍스트를 왼쪽으로 정렬
                                   children: [
                                     Text(
                                       _apiStatusMessage,
@@ -153,7 +154,7 @@ class _MainScreenState extends State<MainScreen> {
     return GestureDetector(
       onTap: () {
         if (url == MainUrls.NDRIMS) {
-          _openWebView(context, url, true, false); // NDRIMS에 맞는 설정
+          _openWebView(context, url, true, false);
         } else {
           _openWebView(context, url, showHomeIcon, showHeader);
         }
