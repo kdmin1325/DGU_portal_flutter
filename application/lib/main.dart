@@ -99,7 +99,7 @@ class _MainScreenState extends State<MainScreen> {
                             _buildGridItem(context, ImageAssets.eclass, squareIconSize, MainUrls.ECLASS, true, false),
                             _buildGridItem(context, ImageAssets.noti, squareIconSize, MainUrls.GENERALNOTICE, false, true),
                             _buildGridItem(context, ImageAssets.bus, squareIconSize, MainUrls.BUS, true, false),
-                            _buildGridItem(context, ImageAssets.ndrims, squareIconSize, MainUrls.NDRIMS, false, true),
+                            _buildGridItem(context, ImageAssets.ndrims, squareIconSize, MainUrls.NDRIMS, false, false), // NDRIMS에 맞는 조건 설정
                           ],
                         ),
                         SizedBox(height: spacing * 0.5),
@@ -122,10 +122,10 @@ class _MainScreenState extends State<MainScreen> {
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16.0), // 좌우 패딩ㅣ 추가
+                                padding: const EdgeInsets.symmetric(horizontal: 16.0), // 좌우 패딩을 추가
                                 child: Column(
                                   children: [
-                                    Spacer(),
+                                    Spacer(), // 위쪽 공간을 추가하여 텍스트를 아래로 밀어냅니다.
                                     Text(
                                       _apiStatusMessage,
                                       style: TextStyle(fontSize: 18),
@@ -152,7 +152,13 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget _buildGridItem(BuildContext context, String assetPath, double iconSize, String? url, bool? showHomeIcon, bool? showHeader) {
     return GestureDetector(
-      onTap: () => _openWebView(context, url, showHomeIcon, showHeader),
+      onTap: () {
+        if (url == MainUrls.NDRIMS) {
+          _openWebView(context, url, true, false); // NDRIMS에 맞는 설정
+        } else {
+          _openWebView(context, url, showHomeIcon, showHeader);
+        }
+      },
       child: Center(
         child: Image.asset(assetPath, width: iconSize, height: iconSize),
       ),
