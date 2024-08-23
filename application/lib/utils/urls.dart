@@ -1,7 +1,10 @@
+// api url
 class ApiUrls {
   static const String SERVERIP = 'http://a9b8c7d6e5f4g3h2i1j0klmnopqrst.ap-northeast-2.elasticbeanstalk.com';
 }
 
+// 모든 url은 순서대로 배치되어 있음
+// 메인 화면 url
 class MainUrls {
   static const String ECLASS = 'https://eclass.dongguk.ac.kr/home/mainHome/Form/main';
   static const String GENERALNOTICE = 'https://web.dongguk.ac.kr/article/generalnotice/list';
@@ -11,6 +14,8 @@ class MainUrls {
   static const String DORMNOTiCE = 'https://dorm.dongguk.ac.kr/';
 }
 
+// 모든 url은 순서대로 배치되어 있음
+// 단과대 화면 url
 class UniUrls {
   static const String ENGINEER = 'https://infocom.dongguk.ac.kr/';
   static const String BOOK = 'https://coreanwr.dongguk.ac.kr/';
