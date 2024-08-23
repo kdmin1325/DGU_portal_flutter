@@ -5,6 +5,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'uni.dart';
 import '../service/api_service.dart';
 import '../utils/img_assets.dart';
+import '../utils/urls.dart';
 
 void main() {
   runApp(const MyApp());
@@ -95,10 +96,10 @@ class _MainScreenState extends State<MainScreen> {
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           children: [
-                            _buildGridItem(context, ImageAssets.eclass, squareIconSize, 'https://eclass.dongguk.ac.kr/home/mainHome/Form/main', true, false),
-                            _buildGridItem(context, ImageAssets.noti, squareIconSize, 'https://web.dongguk.ac.kr/article/generalnotice/list', false, true),
-                            _buildGridItem(context, ImageAssets.bus, squareIconSize, 'https://dongguk.unibus.kr/#/', true, false),
-                            _buildGridItem(context, ImageAssets.ndrims, squareIconSize, 'https://ndrims.dongguk.ac.kr/unis/index.do', false, true),
+                            _buildGridItem(context, ImageAssets.eclass, squareIconSize, Urls.ECLASS, true, false),
+                            _buildGridItem(context, ImageAssets.noti, squareIconSize, Urls.GENERALNOTICE, false, true),
+                            _buildGridItem(context, ImageAssets.bus, squareIconSize, Urls.BUS, true, false),
+                            _buildGridItem(context, ImageAssets.ndrims, squareIconSize, Urls.NDRIMS, false, true),
                           ],
                         ),
                         SizedBox(height: spacing * 0.5),
@@ -107,8 +108,8 @@ class _MainScreenState extends State<MainScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                _buildCircleItem(context, ImageAssets.mnoti, circleIconSize, 'https://web.dongguk.ac.kr/article/servicenotice/list', false, false),
-                                _buildCircleItem(context, ImageAssets.donoti, circleIconSize, 'https://dorm.dongguk.ac.kr/', true, false),
+                                _buildCircleItem(context, ImageAssets.mnoti, circleIconSize, Urls.MONEYNOTICE, false, false),
+                                _buildCircleItem(context, ImageAssets.donoti, circleIconSize, Urls.DORMNOTiCE, true, false),
                                 _buildCircleItem(context, ImageAssets.uni, circleIconSize, null, false, true),
                               ],
                             ),
@@ -153,7 +154,7 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget _buildCircleItem(BuildContext context, String assetPath, double iconSize, String? url, bool? showHomeIcon, bool isUniIcon) {
     return GestureDetector(
-      onTap: () => isUniIcon ? _openUniScreen(context) : _openWebView(context, url, showHomeIcon, url == 'https://web.dongguk.ac.kr/article/generalnotice/list' || url == 'https://web.dongguk.ac.kr/article/acdnotice/list' || url == 'https://web.dongguk.ac.kr/article/servicenotice/list'),
+      onTap: () => isUniIcon ? _openUniScreen(context) : _openWebView(context, url, showHomeIcon, url == Urls.GENERALNOTICE || url == Urls.NDRIMS || url == Urls.MONEYNOTICE),
       child: Column(
         children: [
           Image.asset(assetPath, width: iconSize, height: iconSize),
