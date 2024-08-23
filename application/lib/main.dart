@@ -96,10 +96,10 @@ class _MainScreenState extends State<MainScreen> {
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           children: [
-                            _buildGridItem(context, ImageAssets.eclass, squareIconSize, Urls.ECLASS, true, false),
-                            _buildGridItem(context, ImageAssets.noti, squareIconSize, Urls.GENERALNOTICE, false, true),
-                            _buildGridItem(context, ImageAssets.bus, squareIconSize, Urls.BUS, true, false),
-                            _buildGridItem(context, ImageAssets.ndrims, squareIconSize, Urls.NDRIMS, false, true),
+                            _buildGridItem(context, ImageAssets.eclass, squareIconSize, MainUrls.ECLASS, true, false),
+                            _buildGridItem(context, ImageAssets.noti, squareIconSize, MainUrls.GENERALNOTICE, false, true),
+                            _buildGridItem(context, ImageAssets.bus, squareIconSize, MainUrls.BUS, true, false),
+                            _buildGridItem(context, ImageAssets.ndrims, squareIconSize, MainUrls.NDRIMS, false, true),
                           ],
                         ),
                         SizedBox(height: spacing * 0.5),
@@ -108,8 +108,8 @@ class _MainScreenState extends State<MainScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                _buildCircleItem(context, ImageAssets.mnoti, circleIconSize, Urls.MONEYNOTICE, false, false),
-                                _buildCircleItem(context, ImageAssets.donoti, circleIconSize, Urls.DORMNOTiCE, true, false),
+                                _buildCircleItem(context, ImageAssets.mnoti, circleIconSize, MainUrls.MONEYNOTICE, false, false),
+                                _buildCircleItem(context, ImageAssets.donoti, circleIconSize, MainUrls.DORMNOTiCE, true, false),
                                 _buildCircleItem(context, ImageAssets.uni, circleIconSize, null, false, true),
                               ],
                             ),
@@ -154,7 +154,7 @@ class _MainScreenState extends State<MainScreen> {
 
   Widget _buildCircleItem(BuildContext context, String assetPath, double iconSize, String? url, bool? showHomeIcon, bool isUniIcon) {
     return GestureDetector(
-      onTap: () => isUniIcon ? _openUniScreen(context) : _openWebView(context, url, showHomeIcon, url == Urls.GENERALNOTICE || url == Urls.NDRIMS || url == Urls.MONEYNOTICE),
+      onTap: () => isUniIcon ? _openUniScreen(context) : _openWebView(context, url, showHomeIcon, url == MainUrls.GENERALNOTICE || url == MainUrls.NDRIMS || url == MainUrls.MONEYNOTICE),
       child: Column(
         children: [
           Image.asset(assetPath, width: iconSize, height: iconSize),

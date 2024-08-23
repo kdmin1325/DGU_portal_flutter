@@ -3,7 +3,7 @@ import '../utils/urls.dart';
 
 class ApiService {
   static final Dio _dio = Dio(BaseOptions(
-    baseUrl: Urls.SERVERIP,
+    baseUrl: ApiUrls.SERVERIP,
     connectTimeout: Duration(milliseconds: 5000),
     receiveTimeout: Duration(milliseconds: 3000),
   ));
