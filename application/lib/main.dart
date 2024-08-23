@@ -125,7 +125,6 @@ class _MainScreenState extends State<MainScreen> {
                                 padding: const EdgeInsets.symmetric(horizontal: 16.0), // 좌우 패딩을 추가
                                 child: Column(
                                   children: [
-                                    Spacer(), // 위쪽 공간을 추가하여 텍스트를 아래로 밀어냅니다.
                                     Text(
                                       _apiStatusMessage,
                                       style: TextStyle(fontSize: 18),

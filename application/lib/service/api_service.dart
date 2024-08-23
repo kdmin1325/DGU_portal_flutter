@@ -19,9 +19,19 @@ class ApiService {
         StringBuffer output = StringBuffer();
 
         for (var item in jsonResponse) {
-          // 각 리스트의 첫 번째 항목이 한글로 된 텍스트라고 가정
+          // 각 리스트의 첫 번째 항목이 텍스트라고 가정
           if (item is List && item.isNotEmpty) {
-            output.writeln(item[0]);  // 첫 번째 값만 출력
+            String text = item[0];
+
+            // 한 줄의 최대 길이 설정 (예: 33자로 제한)
+            const int maxLineLength = 33;
+
+            // 문장이 maxLineLength를 넘으면 자르고 '···' 붙이기
+            if (text.length > maxLineLength) {
+              output.writeln('${text.substring(0, maxLineLength)}···');
+            } else {
+              output.writeln(text);
+            }
           }
         }
 
@@ -29,7 +39,6 @@ class ApiService {
       }
 
       return '데이터 형식이 올바르지 않습니다.';
-
     } catch (e) {
       print('Error occurred: $e'); // 에러일 경우 에러 코드 확인
       return '인터넷 연결이 없습니다.';
