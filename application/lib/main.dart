@@ -99,7 +99,7 @@ class _MainScreenState extends State<MainScreen> {
                             _buildGridItem(context, ImageAssets.eclass, squareIconSize, MainUrls.ECLASS, true, false),
                             _buildGridItem(context, ImageAssets.noti, squareIconSize, MainUrls.GENERALNOTICE, false, true),
                             _buildGridItem(context, ImageAssets.bus, squareIconSize, MainUrls.BUS, true, false),
-                            _buildGridItem(context, ImageAssets.ndrims, squareIconSize, MainUrls.NDRIMS, false, false), // NDRIMS에 맞는 조건 설정
+                            _buildGridItem(context, ImageAssets.ndrims, squareIconSize, MainUrls.NDRIMS, false, false),
                           ],
                         ),
                         SizedBox(height: spacing * 0.5),
@@ -122,16 +122,19 @@ class _MainScreenState extends State<MainScreen> {
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0), // 좌우 및 상하 패딩 추가
+                                padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 16.0),
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start, // 텍스트를 왼쪽으로 정렬
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      _apiStatusMessage,
-                                      style: TextStyle(fontSize: 18),
-                                      textAlign: TextAlign.left, // 왼쪽 정렬
-                                    ),
-                                    SizedBox(height: 16), // 아래쪽에 약간의 공간 추가
+                                    // 텍스트 간의 간격 추가
+                                    for (var line in _apiStatusMessage.split('\n')) ...[
+                                      Text(
+                                        line,
+                                        style: TextStyle(fontSize: 18),
+                                        textAlign: TextAlign.left,
+                                      ),
+                                      SizedBox(height: 3.5), // 텍스트 사이 간격 설정
+                                    ],
                                   ],
                                 ),
                               ),
