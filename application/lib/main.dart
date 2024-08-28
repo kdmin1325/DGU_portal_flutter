@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'uni.dart';
 import '../service/api_service.dart';
-import '../utils/img_assets.dart';
 import '../utils/urls.dart';
 
 void main() {
@@ -39,16 +38,12 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     super.initState();
-    _checkApiStatus();  // static 메서드를 호출하는 방식으로 변경
+    _fetchApiStatus('red'); // 기본적으로 빨간 버튼의 API 호출
   }
 
-  // static 메서드를 사용하여 API 상태를 확인
-  void _checkApiStatus() {
-    _fetchApiStatus();
-  }
-
-  Future<void> _fetchApiStatus() async {
-    final status = await ApiService.fetchApiStatus();  // static 메서드 호출
+  // API 상태 확인 메서드
+  Future<void> _fetchApiStatus(String buttonColor) async {
+    final status = await ApiService.fetchApiStatus(buttonColor); // API 호출
     setState(() {
       _apiStatusMessage = status;
     });
@@ -60,6 +55,7 @@ class _MainScreenState extends State<MainScreen> {
       body: SafeArea(
         child: Column(
           children: [
+            // 상단 바
             PreferredSize(
               preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.1),
               child: AppBar(
@@ -89,6 +85,7 @@ class _MainScreenState extends State<MainScreen> {
                     padding: EdgeInsets.all(spacing),
                     child: ListView(
                       children: [
+                        // 사각형 아이콘들
                         GridView.count(
                           crossAxisCount: 2,
                           crossAxisSpacing: spacing,
@@ -103,44 +100,17 @@ class _MainScreenState extends State<MainScreen> {
                           ],
                         ),
                         SizedBox(height: spacing * 0.5),
-                        Column(
+                        // 원형 아이콘들
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                _buildCircleItem(context, ImageAssets.mnoti, circleIconSize, MainUrls.MONEYNOTICE, false, false),
-                                _buildCircleItem(context, ImageAssets.donoti, circleIconSize, MainUrls.DORMNOTiCE, true, false),
-                                _buildCircleItem(context, ImageAssets.uni, circleIconSize, null, false, true),
-                              ],
-                            ),
-                            SizedBox(height: spacing * 0.5),
-                            Container(
-                              width: constraints.maxWidth * 0.85,
-                              height: constraints.maxWidth * 0.45,
-                              decoration: BoxDecoration(
-                                color: Color(0xFFE2E2E2),
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 16.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // 텍스트 간의 간격 추가
-                                    for (var line in _apiStatusMessage.split('\n')) ...[
-                                      Text(
-                                        line,
-                                        style: TextStyle(fontSize: 18),
-                                        textAlign: TextAlign.left,
-                                      ),
-                                      SizedBox(height: 3.5), // 텍스트 사이 간격 설정
-                                    ],
-                                  ],
-                                ),
-                              ),
-                            ),
+                            _buildCircleItem(context, ImageAssets.mnoti, circleIconSize, MainUrls.MONEYNOTICE, false, false),
+                            _buildCircleItem(context, ImageAssets.donoti, circleIconSize, MainUrls.DORMNOTiCE, true, false),
+                            _buildCircleItem(context, ImageAssets.uni, circleIconSize, null, false, true),
                           ],
                         ),
+                        SizedBox(height: spacing * 0.5),
+                        _buildMacStyleAlert(constraints.maxWidth * 0.85, constraints.maxWidth * 0.45),
                       ],
                     ),
                   );
@@ -153,14 +123,69 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  Widget _buildMacStyleAlert(double width, double height) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Container(
+        width: width,  // 알림창 가로 길이
+        height: height,  // 고정된 높이 설정
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(15),
+        ),
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 출력이 각기 다른 버튼들
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildControlButton(Colors.red, () {
+                  _fetchApiStatus('red');
+                }),
+                _buildControlButton(Colors.yellow, () {
+                  _fetchApiStatus('yellow');
+                }),
+                _buildControlButton(Colors.green, () {
+                  _fetchApiStatus('green');
+                }),
+              ],
+            ),
+            SizedBox(height: 16),
+            // API 상태 메시지를 표시하는 부분
+            Expanded(
+              child: Text(
+                _apiStatusMessage,
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // 알림창 컨트롤 버튼
+  Widget _buildControlButton(Color color, VoidCallback onPressed) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        width: 16,
+        height: 16,
+        margin: EdgeInsets.only(right: 8),
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
+        ),
+      ),
+    );
+  }
+
   Widget _buildGridItem(BuildContext context, String assetPath, double iconSize, String? url, bool? showHomeIcon, bool? showHeader) {
     return GestureDetector(
       onTap: () {
-        if (url == MainUrls.NDRIMS) {
-          _openWebView(context, url, true, false);
-        } else {
-          _openWebView(context, url, showHomeIcon, showHeader);
-        }
+        _openWebView(context, url, showHomeIcon, showHeader);
       },
       child: Center(
         child: Image.asset(assetPath, width: iconSize, height: iconSize),
@@ -181,23 +206,16 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   void _openWebView(BuildContext context, String? url, bool? showHomeIcon, bool? showHeader) {
-    final bool showHomeIconSafe = showHomeIcon ?? false;
-    final bool showHeaderSafe = showHeader ?? true;
-
-    if (url != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => WebViewScreen(
-            url: url,
-            showHomeIcon: showHomeIconSafe,
-            showHeader: showHeaderSafe,
-          ),
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WebViewScreen(
+          url: url ?? '',
+          showHomeIcon: showHomeIcon ?? false,
+          showHeader: showHeader ?? true,
         ),
-      );
-    } else {
-      print('URL is null');
-    }
+      ),
+    );
   }
 
   void _openUniScreen(BuildContext context) {
@@ -215,8 +233,8 @@ class WebViewScreen extends StatefulWidget {
 
   WebViewScreen({
     required this.url,
-    this.showHomeIcon = false,
-    this.showHeader = true,
+    this.showHomeIcon = false, // 기본값 설정
+    this.showHeader = true, // 기본값 설정
   });
 
   @override
@@ -266,11 +284,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
         body: SafeArea(
           child: Stack(
             children: [
-              WebViewWidget(
-                controller: _controller,
-              ),
-              if (_isLoading)
-                Center(child: CircularProgressIndicator()),
+              WebViewWidget(controller: _controller),
+              if (_isLoading) Center(child: CircularProgressIndicator()),
               if (widget.showHomeIcon)
                 Positioned(
                   right: 20,

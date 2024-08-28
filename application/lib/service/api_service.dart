@@ -4,34 +4,56 @@ import '../utils/urls.dart';
 
 class ApiService {
   static final Dio _dio = Dio(BaseOptions(
-    baseUrl: ApiUrls.SERVERIP + '/information/generalnotice',
     connectTimeout: Duration(milliseconds: 5000),
     receiveTimeout: Duration(milliseconds: 3000),
   ));
 
-  static Future<String> fetchApiStatus() async {
+  // 버튼 색상에 따라 API 엔드포인트를 결정하는 메서드
+  static Future<String> fetchApiStatus(String buttonColor) async {
+    String endpoint;
+
+    // 버튼 색상에 따른 API 엔드포인트 설정
+    switch (buttonColor) {
+      case 'red':
+        endpoint = '/information/generalnotice';
+        break;
+      case 'yellow':
+        endpoint = '/information/acdnotice';
+        break;
+      case 'green':
+        endpoint = '/information/empprgnoti';
+        break;
+      default:
+        return 'error';
+    }
+
     try {
-      final response = await _dio.get('');
+      final response = await _dio.get(ApiUrls.SERVERIP + endpoint);
 
       var jsonResponse = response.data;
 
       if (jsonResponse is List) {
         StringBuffer output = StringBuffer();
 
-        for (var item in jsonResponse) {
+        // 최신 항목부터 6개 가져오기
+        var latestItems = jsonResponse.reversed.take(6).toList();
+
+        // 가장 최신 항목부터 차례대로 추가
+        for (var item in latestItems) {
           // 각 리스트의 첫 번째 항목이 텍스트라고 가정
           if (item is List && item.isNotEmpty) {
             String text = item[0];
 
-            // 한 줄의 최대 길이 설정 (예: 33자로 제한)
-            const int maxLineLength = 33;
+            // 최대 길이 설정
+            const int maxLineLength = 28;
 
             // 문장이 maxLineLength를 넘으면 자르고 '···' 붙이기
             if (text.length > maxLineLength) {
-              output.writeln('${text.substring(0, maxLineLength)}···');
-            } else {
-              output.writeln(text);
+              text = '${text.substring(0, maxLineLength)}···';
             }
+
+            // 각 텍스트를 새로운 줄로 추가
+            output.writeln(text);
           }
         }
 
