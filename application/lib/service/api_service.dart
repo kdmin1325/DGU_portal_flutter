@@ -14,17 +14,17 @@ class ApiService {
 
     // 버튼 색상에 따른 API 엔드포인트 설정
     switch (buttonColor) {
-      case 'red':
+      case 'general':
         endpoint = '/information/generalnotice';
         break;
-      case 'yellow':
+      case 'school':
         endpoint = '/information/acdnotice';
         break;
-      case 'green':
+      case 'employment':
         endpoint = '/information/empprgnoti';
         break;
       default:
-        return 'error';
+        return 'error in button I think';
     }
 
     try {
@@ -63,7 +63,7 @@ class ApiService {
       return '데이터 형식이 올바르지 않습니다.';
     } catch (e) {
       print('Error occurred: $e'); // 에러일 경우 에러 코드 확인
-      return '인터넷 연결이 없습니다.';
+      return '인터넷 연결을 확인해주세요.';
     }
   }
 }

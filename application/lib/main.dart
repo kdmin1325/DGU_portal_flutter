@@ -33,12 +33,13 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  String _apiStatusMessage = '연결 중...';
+  String _apiStatusMessage = '연결 중...'; // 연결 메세지
+  String _activeButton = 'general'; // 기본적으로 첫 번째 버튼이 활성화된 상태
 
   @override
   void initState() {
     super.initState();
-    _fetchApiStatus('red'); // 기본적으로 빨간 버튼의 API 호출
+    _fetchApiStatus('general'); // 기본적으로 일반 공지 버튼의 API 호출
   }
 
   // API 상태 확인 메서드
@@ -46,6 +47,13 @@ class _MainScreenState extends State<MainScreen> {
     final status = await ApiService.fetchApiStatus(buttonColor); // API 호출
     setState(() {
       _apiStatusMessage = status;
+    });
+  }
+
+  void _onButtonPressed(String buttonColor) {
+    setState(() {
+      _activeButton = buttonColor;
+      _fetchApiStatus(buttonColor);
     });
   }
 
@@ -110,7 +118,7 @@ class _MainScreenState extends State<MainScreen> {
                           ],
                         ),
                         SizedBox(height: spacing * 0.5),
-                        _buildMacStyleAlert(constraints.maxWidth * 0.7, constraints.maxWidth * 0.45), // 출력창 가로 길이 더 줄임
+                        _buildMacStyleAlert(constraints.maxWidth * 0.73, constraints.maxWidth * 0.45),
                       ],
                     ),
                   );
@@ -123,31 +131,38 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  // 알림창 왼쪽에 위치, 공지 불러오는 버튼
   Widget _buildMacStyleAlert(double width, double height) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(13.0),
       child: Row(
         children: [
-          // 왼쪽에 배치된 버튼들
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              _buildControlButton(Colors.red, () {
-                _fetchApiStatus('red');
-              }),
+              ControlButton(
+                isActive: _activeButton == 'general',
+                onPressed: () => _onButtonPressed('general'),
+                buttonText: '일\n반',
+              ),
               SizedBox(height: 8),
-              _buildControlButton(Colors.yellow, () {
-                _fetchApiStatus('yellow');
-              }),
+              ControlButton(
+                isActive: _activeButton == 'school',
+                onPressed: () => _onButtonPressed('school'),
+                buttonText: '학\n사',
+              ),
               SizedBox(height: 8),
-              _buildControlButton(Colors.green, () {
-                _fetchApiStatus('green');
-              }),
+              ControlButton(
+                isActive: _activeButton == 'employment',
+                onPressed: () => _onButtonPressed('employment'),
+                buttonText: '취\n업',
+              ),
             ],
           ),
-          SizedBox(width: 16), // 버튼과 텍스트 영역 사이의 간격
+          // 버튼과 텍스트 영역 사이의 간격
+          SizedBox(width: 10),
           Container(
-            width: width, // 더 줄어든 출력창 가로 길이
+            width: width,
             height: height,
             decoration: BoxDecoration(
               color: Colors.grey[200],
@@ -157,6 +172,7 @@ class _MainScreenState extends State<MainScreen> {
             child: Expanded(
               child: Text(
                 _apiStatusMessage,
+                // 알림창 텍스트 크기
                 style: TextStyle(fontSize: 18),
               ),
             ),
@@ -166,32 +182,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  // 알림창 컨트롤 버튼
-  Widget _buildControlButton(Color color, VoidCallback onPressed) {
-    return StatefulBuilder(
-      builder: (BuildContext context, StateSetter setState) {
-        Color buttonColor = color;
-        return GestureDetector(
-          onTap: () {
-            setState(() {
-              buttonColor = Colors.grey[700]!;  // 클릭 시 색상 변경
-              onPressed();
-            });
-          },
-          child: Container(
-            width: 30, // 버튼 크기
-            height: 30,
-            margin: EdgeInsets.only(bottom: 16), // 버튼 사이 간격
-            decoration: BoxDecoration(
-              color: buttonColor,
-              shape: BoxShape.circle,
-            ),
-          ),
-        );
-      },
-    );
-  }
-
+  // 사각 아이콘 이미지 위젯 처리
   Widget _buildGridItem(BuildContext context, String assetPath, double iconSize, String? url, bool? showHomeIcon, bool? showHeader) {
     return GestureDetector(
       onTap: () {
@@ -203,6 +194,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  // 원형 아이콘 이미지 위젯 처리
   Widget _buildCircleItem(BuildContext context, String assetPath, double iconSize, String? url, bool? showHomeIcon, bool isUniIcon) {
     return GestureDetector(
       onTap: () => isUniIcon ? _openUniScreen(context) : _openWebView(context, url, showHomeIcon, url == MainUrls.GENERALNOTICE || url == MainUrls.NDRIMS || url == MainUrls.MONEYNOTICE),
@@ -215,6 +207,7 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  // 웹뷰 조건
   void _openWebView(BuildContext context, String? url, bool? showHomeIcon, bool? showHeader) {
     Navigator.push(
       context,
@@ -228,10 +221,47 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
+  // 단과대 페이지 넘어가는 함수
   void _openUniScreen(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => UniScreen()),
+    );
+  }
+}
+
+// ControlButton StatefulWidget
+class ControlButton extends StatelessWidget {
+  final bool isActive;
+  final VoidCallback onPressed;
+  final String buttonText;
+
+  ControlButton({required this.isActive, required this.onPressed, required this.buttonText});
+
+  // 알림창 공지 불러오는 버튼 ui
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        width: 30, // 버튼 너비
+        height: 50, // 버튼 높이
+        margin: EdgeInsets.only(bottom: 4),
+        decoration: BoxDecoration(
+          // 클릭 시 보이는 버튼 색과 기본 버튼 색
+          color: isActive ? Colors.grey[600] : Colors.grey[200],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          buttonText,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: isActive ? Colors.white : Colors.black,
+            fontSize: 14,
+          ),
+        ),
+      ),
     );
   }
 }
