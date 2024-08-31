@@ -110,7 +110,7 @@ class _MainScreenState extends State<MainScreen> {
                           ],
                         ),
                         SizedBox(height: spacing * 0.5),
-                        _buildMacStyleAlert(constraints.maxWidth * 0.85, constraints.maxWidth * 0.45),
+                        _buildMacStyleAlert(constraints.maxWidth * 0.7, constraints.maxWidth * 0.45), // 출력창 가로 길이 더 줄임
                       ],
                     ),
                   );
@@ -126,59 +126,69 @@ class _MainScreenState extends State<MainScreen> {
   Widget _buildMacStyleAlert(double width, double height) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Container(
-        width: width,  // 알림창 가로 길이
-        height: height,  // 고정된 높이 설정
-        decoration: BoxDecoration(
-          color: Colors.grey[200],
-          borderRadius: BorderRadius.circular(15),
-        ),
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // 출력이 각기 다른 버튼들
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildControlButton(Colors.red, () {
-                  _fetchApiStatus('red');
-                }),
-                _buildControlButton(Colors.yellow, () {
-                  _fetchApiStatus('yellow');
-                }),
-                _buildControlButton(Colors.green, () {
-                  _fetchApiStatus('green');
-                }),
-              ],
+      child: Row(
+        children: [
+          // 왼쪽에 배치된 버튼들
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              _buildControlButton(Colors.red, () {
+                _fetchApiStatus('red');
+              }),
+              SizedBox(height: 8),
+              _buildControlButton(Colors.yellow, () {
+                _fetchApiStatus('yellow');
+              }),
+              SizedBox(height: 8),
+              _buildControlButton(Colors.green, () {
+                _fetchApiStatus('green');
+              }),
+            ],
+          ),
+          SizedBox(width: 16), // 버튼과 텍스트 영역 사이의 간격
+          Container(
+            width: width, // 더 줄어든 출력창 가로 길이
+            height: height,
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(15),
             ),
-            SizedBox(height: 16),
-            // API 상태 메시지를 표시하는 부분
-            Expanded(
+            padding: const EdgeInsets.all(16.0),
+            child: Expanded(
               child: Text(
                 _apiStatusMessage,
                 style: TextStyle(fontSize: 18),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
   // 알림창 컨트롤 버튼
   Widget _buildControlButton(Color color, VoidCallback onPressed) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        width: 16,
-        height: 16,
-        margin: EdgeInsets.only(right: 8),
-        decoration: BoxDecoration(
-          color: color,
-          shape: BoxShape.circle,
-        ),
-      ),
+    return StatefulBuilder(
+      builder: (BuildContext context, StateSetter setState) {
+        Color buttonColor = color;
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              buttonColor = Colors.grey[700]!;  // 클릭 시 색상 변경
+              onPressed();
+            });
+          },
+          child: Container(
+            width: 30, // 버튼 크기
+            height: 30,
+            margin: EdgeInsets.only(bottom: 16), // 버튼 사이 간격
+            decoration: BoxDecoration(
+              color: buttonColor,
+              shape: BoxShape.circle,
+            ),
+          ),
+        );
+      },
     );
   }
 
