@@ -2,10 +2,9 @@ import 'package:application/utils/img_assets.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:http/http.dart' as http;
 import 'uni.dart';
 import '../service/api_service.dart';
-import '../utils/img_assets.dart';
+import '../utils/urls.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,18 +33,27 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  String _apiStatusMessage = 'Checking API status...';
+  String _apiStatusMessage = '연결 중...'; // 연결 메세지
+  String _activeButton = 'general'; // 기본적으로 첫 번째 버튼이 활성화된 상태
 
   @override
   void initState() {
     super.initState();
-    _checkApiStatus();
+    _fetchApiStatus('general'); // 기본적으로 일반 공지 버튼의 API 호출
   }
 
-  Future<void> _checkApiStatus() async {
-    final status = await fetchApiStatus();
+  // API 상태 확인 메서드
+  Future<void> _fetchApiStatus(String buttonColor) async {
+    final status = await ApiService.fetchApiStatus(buttonColor); // API 호출
     setState(() {
       _apiStatusMessage = status;
+    });
+  }
+
+  void _onButtonPressed(String buttonColor) {
+    setState(() {
+      _activeButton = buttonColor;
+      _fetchApiStatus(buttonColor);
     });
   }
 
@@ -55,6 +63,7 @@ class _MainScreenState extends State<MainScreen> {
       body: SafeArea(
         child: Column(
           children: [
+            // 상단 바
             PreferredSize(
               preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.1),
               child: AppBar(
@@ -84,6 +93,7 @@ class _MainScreenState extends State<MainScreen> {
                     padding: EdgeInsets.all(spacing),
                     child: ListView(
                       children: [
+                        // 사각형 아이콘들
                         GridView.count(
                           crossAxisCount: 2,
                           crossAxisSpacing: spacing,
@@ -91,41 +101,24 @@ class _MainScreenState extends State<MainScreen> {
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           children: [
-                            _buildGridItem(context, ImageAssets.eclass, squareIconSize, 'https://eclass.dongguk.ac.kr/home/mainHome/Form/main', true, false),
-                            _buildGridItem(context, ImageAssets.noti, squareIconSize, 'https://web.dongguk.ac.kr/article/generalnotice/list', false, true),
-                            _buildGridItem(context, ImageAssets.bus, squareIconSize, 'https://dongguk.unibus.kr/#/', true, false),
-                            _buildGridItem(context, ImageAssets.mdrims, squareIconSize, 'https://web.dongguk.ac.kr/article/acdnotice/list', false, true),
+                            _buildGridItem(context, ImageAssets.eclass, squareIconSize, MainUrls.ECLASS, true, false),
+                            _buildGridItem(context, ImageAssets.noti, squareIconSize, MainUrls.GENERALNOTICE, false, true),
+                            _buildGridItem(context, ImageAssets.bus, squareIconSize, MainUrls.BUS, true, false),
+                            _buildGridItem(context, ImageAssets.ndrims, squareIconSize, MainUrls.NDRIMS, false, false),
                           ],
                         ),
                         SizedBox(height: spacing * 0.5),
-                        Column(
+                        // 원형 아이콘들
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                _buildCircleItem(context, ImageAssets.mnoti, circleIconSize, 'https://web.dongguk.ac.kr/article/servicenotice/list', false, false),
-                                _buildCircleItem(context, ImageAssets.donoti, circleIconSize, 'https://dorm.dongguk.ac.kr/', true, false),
-                                _buildCircleItem(context, ImageAssets.uni, circleIconSize, null, false, true),
-                              ],
-                            ),
-                            SizedBox(height: spacing * 0.5),
-                            Container(
-                              width: constraints.maxWidth * 0.85,
-                              height: constraints.maxWidth * 0.45,
-                              decoration: BoxDecoration(
-                                color: Color(0xFFE2E2E2),
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  _apiStatusMessage,
-                                  style: TextStyle(fontSize: 18),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ),
+                            _buildCircleItem(context, ImageAssets.mnoti, circleIconSize, MainUrls.MONEYNOTICE, false, false),
+                            _buildCircleItem(context, ImageAssets.donoti, circleIconSize, MainUrls.DORMNOTiCE, true, false),
+                            _buildCircleItem(context, ImageAssets.uni, circleIconSize, null, false, true),
                           ],
                         ),
+                        SizedBox(height: spacing * 0.5),
+                        _buildMacStyleAlert(constraints.maxWidth * 0.73, constraints.maxWidth * 0.45),
                       ],
                     ),
                   );
@@ -138,18 +131,73 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget _buildGridItem(BuildContext context, String assetPath, double iconSize, String? url, bool showHomeIcon, bool showHeader) {
+  // 알림창 왼쪽에 위치, 공지 불러오는 버튼
+  Widget _buildMacStyleAlert(double width, double height) {
+    return Padding(
+      padding: const EdgeInsets.all(13.0),
+      child: Row(
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              ControlButton(
+                isActive: _activeButton == 'general',
+                onPressed: () => _onButtonPressed('general'),
+                buttonText: '일\n반',
+              ),
+              SizedBox(height: 8),
+              ControlButton(
+                isActive: _activeButton == 'school',
+                onPressed: () => _onButtonPressed('school'),
+                buttonText: '학\n사',
+              ),
+              SizedBox(height: 8),
+              ControlButton(
+                isActive: _activeButton == 'employment',
+                onPressed: () => _onButtonPressed('employment'),
+                buttonText: '취\n업',
+              ),
+            ],
+          ),
+          // 버튼과 텍스트 영역 사이의 간격
+          SizedBox(width: 10),
+          Container(
+            width: width,
+            height: height,
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(15),
+            ),
+            padding: const EdgeInsets.all(16.0),
+            child: Expanded(
+              child: Text(
+                _apiStatusMessage,
+                // 알림창 텍스트 크기
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 사각 아이콘 이미지 위젯 처리
+  Widget _buildGridItem(BuildContext context, String assetPath, double iconSize, String? url, bool? showHomeIcon, bool? showHeader) {
     return GestureDetector(
-      onTap: () => _openWebView(context, url, showHomeIcon, showHeader),
+      onTap: () {
+        _openWebView(context, url, showHomeIcon, showHeader);
+      },
       child: Center(
         child: Image.asset(assetPath, width: iconSize, height: iconSize),
       ),
     );
   }
 
-  Widget _buildCircleItem(BuildContext context, String assetPath, double iconSize, String? url, bool showHomeIcon, bool isUniIcon) {
+  // 원형 아이콘 이미지 위젯 처리
+  Widget _buildCircleItem(BuildContext context, String assetPath, double iconSize, String? url, bool? showHomeIcon, bool isUniIcon) {
     return GestureDetector(
-      onTap: () => isUniIcon ? _openUniScreen(context) : _openWebView(context, url, showHomeIcon, url == 'https://web.dongguk.ac.kr/article/generalnotice/list' || url == 'https://web.dongguk.ac.kr/article/acdnotice/list' || url == 'https://web.dongguk.ac.kr/article/servicenotice/list'),
+      onTap: () => isUniIcon ? _openUniScreen(context) : _openWebView(context, url, showHomeIcon, url == MainUrls.GENERALNOTICE || url == MainUrls.NDRIMS || url == MainUrls.MONEYNOTICE),
       child: Column(
         children: [
           Image.asset(assetPath, width: iconSize, height: iconSize),
@@ -159,27 +207,61 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  void _openWebView(BuildContext context, String? url, bool showHomeIcon, bool showHeader) {
-    if (url != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => WebViewScreen(
-            url: url,
-            showHomeIcon: showHomeIcon,
-            showHeader: showHeader,
-          ),
+  // 웹뷰 조건
+  void _openWebView(BuildContext context, String? url, bool? showHomeIcon, bool? showHeader) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WebViewScreen(
+          url: url ?? '',
+          showHomeIcon: showHomeIcon ?? false,
+          showHeader: showHeader ?? true,
         ),
-      );
-    } else {
-      print('URL is null');
-    }
+      ),
+    );
   }
 
+  // 단과대 페이지 넘어가는 함수
   void _openUniScreen(BuildContext context) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => UniScreen()),
+    );
+  }
+}
+
+// ControlButton StatefulWidget
+class ControlButton extends StatelessWidget {
+  final bool isActive;
+  final VoidCallback onPressed;
+  final String buttonText;
+
+  ControlButton({required this.isActive, required this.onPressed, required this.buttonText});
+
+  // 알림창 공지 불러오는 버튼 ui
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        width: 30, // 버튼 너비
+        height: 50, // 버튼 높이
+        margin: EdgeInsets.only(bottom: 4),
+        decoration: BoxDecoration(
+          // 클릭 시 보이는 버튼 색과 기본 버튼 색
+          color: isActive ? Colors.grey[600] : Colors.grey[200],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        alignment: Alignment.center,
+        child: Text(
+          buttonText,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: isActive ? Colors.white : Colors.black,
+            fontSize: 14,
+          ),
+        ),
+      ),
     );
   }
 }
@@ -191,8 +273,8 @@ class WebViewScreen extends StatefulWidget {
 
   WebViewScreen({
     required this.url,
-    this.showHomeIcon = false,
-    this.showHeader = true,
+    this.showHomeIcon = false, // 기본값 설정
+    this.showHeader = true, // 기본값 설정
   });
 
   @override
@@ -242,11 +324,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
         body: SafeArea(
           child: Stack(
             children: [
-              WebViewWidget(
-                controller: _controller,
-              ),
-              if (_isLoading)
-                Center(child: CircularProgressIndicator()),
+              WebViewWidget(controller: _controller),
+              if (_isLoading) Center(child: CircularProgressIndicator()),
               if (widget.showHomeIcon)
                 Positioned(
                   right: 20,
@@ -255,10 +334,10 @@ class _WebViewScreenState extends State<WebViewScreen> {
                     onTap: () {
                       Navigator.popUntil(context, (route) => route.isFirst);
                     },
-                    child: Image.asset('assets/home.png', width: 70, height: 70),
+                    child: Image.asset(ImageAssets.home, width: 70, height: 70),
                   ),
                 ),
-              if (_shouldShowHeader())
+              if (widget.showHeader)
                 Positioned(
                   top: 0,
                   left: 0,
@@ -273,7 +352,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                           onTap: () {
                             Navigator.popUntil(context, (route) => route.isFirst);
                           },
-                          child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.06),
+                          child: Image.asset(ImageAssets.dgumain, height: MediaQuery.of(context).size.height * 0.06),
                         ),
                       ),
                       automaticallyImplyLeading: false,
@@ -285,15 +364,5 @@ class _WebViewScreenState extends State<WebViewScreen> {
         ),
       ),
     );
-  }
-
-  bool _shouldShowHeader() {
-    final headerUrls = [
-      'https://web.dongguk.ac.kr/article/generalnotice/list',
-      'https://web.dongguk.ac.kr/article/acdnotice/list',
-      'https://web.dongguk.ac.kr/article/servicenotice/list',
-    ];
-
-    return headerUrls.contains(widget.url);
   }
 }

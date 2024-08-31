@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import '../utils/urls.dart';
 
 class UniScreen extends StatelessWidget {
   const UniScreen({Key? key}) : super(key: key);
@@ -47,14 +48,14 @@ class UniScreen extends StatelessWidget {
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               children: [
-                                _buildGridItem(context, 'assets/en_uni.png', squareIconSize, 'https://infocom.dongguk.ac.kr/'),
-                                _buildGridItem(context, 'assets/book_uni.png', squareIconSize, 'https://coreanwr.dongguk.ac.kr/'),
-                                _buildGridItem(context, 'assets/nu_uni.png', squareIconSize, 'https://nursing.dongguk.ac.kr/'),
-                                _buildGridItem(context, 'assets/bot_uni.png', squareIconSize, 'https://buddhist.dongguk.ac.kr/'),
+                                _buildGridItem(context, 'assets/en_uni.png', squareIconSize, UniUrls.ENGINEER),
+                                _buildGridItem(context, 'assets/book_uni.png', squareIconSize, UniUrls.BOOK),
+                                _buildGridItem(context, 'assets/nu_uni.png', squareIconSize, UniUrls.NURSING),
+                                _buildGridItem(context, 'assets/bot_uni.png', squareIconSize, UniUrls.BUDDHIST),
                               ],
                             ),
                             SizedBox(height: spacing * 0.3),
-                            _buildWideItem(context, 'assets/computer.png', wideIconHeight, 'https://ce.dongguk.ac.kr/'),
+                            _buildWideItem(context, 'assets/computer.png', wideIconHeight, UniUrls.COMPUTER),
                             SizedBox(height: spacing * 0.6),
                             GridView.count(
                               crossAxisCount: 4,
@@ -63,14 +64,14 @@ class UniScreen extends StatelessWidget {
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               children: [
-                                _buildGridItem(context, 'assets/hotel_cook.png', squareIconSize / 2, 'https://food.dongguk.ac.kr/'),
-                                _buildGridItem(context, 'assets/hotel_hotel.png', squareIconSize / 2, 'https://travel.dongguk.ac.kr/HOME/travel/index.htm'),
-                                _buildGridItem(context, 'assets/pol.png', squareIconSize / 2, 'https://police.dongguk.ac.kr/'),
-                                _buildGridItem(context, 'assets/air.png', squareIconSize / 2, 'https://airtrade.dongguk.ac.kr/'),
-                                _buildGridItem(context, 'assets/eco.png', squareIconSize / 2, 'https://mgt.dongguk.ac.kr/'),
-                                _buildGridItem(context, 'assets/frame.png', squareIconSize / 2, 'https://openmajor.dongguk.ac.kr/'),
-                                _buildGridItem(context, 'assets/k_medi.png', squareIconSize / 2, 'https://orient.dongguk.ac.kr/'),
-                                _buildGridItem(context, 'assets/medi.png', squareIconSize / 2, 'https://med.dongguk.ac.kr/'),
+                                _buildGridItem(context, 'assets/hotel_cook.png', squareIconSize / 2, UniUrls.COOK),
+                                _buildGridItem(context, 'assets/hotel_hotel.png', squareIconSize / 2, UniUrls.HOTEL),
+                                _buildGridItem(context, 'assets/pol.png', squareIconSize / 2, UniUrls.POLICE),
+                                _buildGridItem(context, 'assets/air.png', squareIconSize / 2, UniUrls.AIR),
+                                _buildGridItem(context, 'assets/eco.png', squareIconSize / 2, UniUrls.ECO),
+                                _buildGridItem(context, 'assets/frame.png', squareIconSize / 2, UniUrls.OPENMAJOR),
+                                _buildGridItem(context, 'assets/k_medi.png', squareIconSize / 2, UniUrls.ORIENT),
+                                _buildGridItem(context, 'assets/medi.png', squareIconSize / 2, UniUrls.MEDICAL),
                               ],
                             ),
                           ],

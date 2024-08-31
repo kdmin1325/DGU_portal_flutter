@@ -40,6 +40,7 @@ dependencies:
   css_colors: ^1.1.5
   webview_flutter: ^4.8.0
   webview_flutter_platform_interface: ^2.10.0
+  dio: ^5.6.0
 
 
 dev_dependencies:
@@ -119,4 +120,4 @@ flutter:
     - assets/medi.png
     - assets/nu_uni.png
     - assets/pol.png
-    - assets/mdrims.png
+    - assets/ndrims.png
