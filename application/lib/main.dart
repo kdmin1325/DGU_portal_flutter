@@ -104,7 +104,7 @@ class _MainScreenState extends State<MainScreen> {
                             _buildGridItem(context, ImageAssets.eclass, squareIconSize, MainUrls.ECLASS, true, false),
                             _buildGridItem(context, ImageAssets.noti, squareIconSize, MainUrls.GENERALNOTICE, false, true),
                             _buildGridItem(context, ImageAssets.bus, squareIconSize, MainUrls.BUS, true, false),
-                            _buildGridItem(context, ImageAssets.ndrims, squareIconSize, MainUrls.NDRIMS, false, false),
+                            _buildGridItem(context, ImageAssets.ndrims, squareIconSize, MainUrls.NDRIMS, true, false),
                           ],
                         ),
                         SizedBox(height: spacing * 0.5),
