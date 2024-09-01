@@ -182,7 +182,7 @@ class _MainScreenState extends State<MainScreen> {
               ],
             ),
           ),
-          // 버튼과 텍스트 영역 사이의 간격
+          // 알림창과 텍스트 영역 사이의 간격
           SizedBox(width: 2),
           Container(
             width: width,

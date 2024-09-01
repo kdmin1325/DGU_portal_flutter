@@ -24,7 +24,7 @@ class ApiService {
         endpoint = '/information/empprgnoti';
         break;
       default:
-        return 'error in button I think';
+        return 'error in endpoint';
     }
 
     try {
@@ -32,17 +32,13 @@ class ApiService {
 
       var jsonResponse = response.data;
 
-      if (jsonResponse is List) {
+      if (jsonResponse is Map<String, dynamic>) {
         StringBuffer output = StringBuffer();
 
-        // 최신 항목부터 6개 가져오기
-        var latestItems = jsonResponse.reversed.take(6).toList();
-
-        // 가장 최신 항목부터 차례대로 추가
-        for (var item in latestItems) {
-          // 각 리스트의 첫 번째 항목이 텍스트라고 가정
-          if (item is List && item.isNotEmpty) {
-            String text = item[0];
+        // 키값이 숫자인 항목들의 벨류값만 가져오기
+        jsonResponse.forEach((key, value) {
+          if (_isNumeric(key)) {
+            String text = value.toString();
 
             // 최대 길이 설정
             const int maxLineLength = 28;
@@ -55,7 +51,7 @@ class ApiService {
             // 각 텍스트를 새로운 줄로 추가
             output.writeln(text);
           }
-        }
+        });
 
         return output.toString().trim();  // 최종 문자열 반환
       }
@@ -65,5 +61,13 @@ class ApiService {
       print('Error occurred: $e'); // 에러일 경우 에러 코드 확인
       return '인터넷 연결을 확인해주세요.';
     }
+  }
+
+  // 키가 숫자인지 확인
+  static bool _isNumeric(String str) {
+    if (str == null) {
+      return false;
+    }
+    return double.tryParse(str) != null;
   }
 }
