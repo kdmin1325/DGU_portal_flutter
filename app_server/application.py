@@ -75,5 +75,19 @@ def empprgnoti_information():
     return jsonify(empprg_noti)
 
 
+@application.route('/user/click/<count>')
+def get_click_count(count):
+    global start_empprg_noti_time, empprg_noti
+    now_time = t.time() - start_empprg_noti_time
+    print("취업 공지 요청")
+
+    if(now_time > 3600):
+        start_empprg_noti_time = t.time()
+        print("공지 새로 고침")
+        empprg_noti = crawling.noti_page_parser(url.empprg)
+
+    return jsonify(empprg_noti)
+
+
 if __name__ == '__main__':
     application.run()

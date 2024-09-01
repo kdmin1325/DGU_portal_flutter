@@ -48,9 +48,9 @@ def noti_page_parser(noti_link):
         match = re.search(r'goDetail\((\d+)\)', onclick_value)
 
         #리스트 저장 부분
-        Noti_num_list.append(Notice_Title)
-        Noti_num_list.append(match.group(1))
-        Noti_Compression.append(Noti_num_list)
+        #Noti_num_list.append(Notice_Title)
+        #Noti_num_list.append(match.group(1))
+        #Noti_Compression.append(Noti_num_list)
 
 
         #딕셔너리 저장 부분
@@ -58,13 +58,13 @@ def noti_page_parser(noti_link):
 
 
         #공지 내용이 5개라면 크롤링 중지?
-        if(len(noti_dic) == 6):
+        if(len(noti_dic) == 7):
             break
 
     puting_ad()
     #TODO
 
-    return Noti_Compression
+    return noti_dic
 
 
 print(noti_page_parser(url.general))
