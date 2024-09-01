@@ -104,7 +104,7 @@ class _MainScreenState extends State<MainScreen> {
                             _buildGridItem(context, ImageAssets.eclass, squareIconSize, MainUrls.ECLASS, true, false),
                             _buildGridItem(context, ImageAssets.noti, squareIconSize, MainUrls.GENERALNOTICE, false, true),
                             _buildGridItem(context, ImageAssets.bus, squareIconSize, MainUrls.BUS, true, false),
-                            _buildGridItem(context, ImageAssets.ndrims, squareIconSize, MainUrls.NDRIMS, false, false),
+                            _buildGridItem(context, ImageAssets.ndrims, squareIconSize, MainUrls.NDRIMS, true, false),
                           ],
                         ),
                         SizedBox(height: spacing * 0.5),
@@ -117,8 +117,8 @@ class _MainScreenState extends State<MainScreen> {
                             _buildCircleItem(context, ImageAssets.uni, circleIconSize, null, false, true),
                           ],
                         ),
-                        SizedBox(height: spacing * 0.5),
-                        _buildMacStyleAlert(constraints.maxWidth * 0.73, constraints.maxWidth * 0.45),
+                        SizedBox(height: spacing * 0.6),
+                        _buildMacStyleAlert(constraints.maxWidth * 0.81, constraints.maxWidth * 0.42),
                       ],
                     ),
                   );
@@ -134,33 +134,56 @@ class _MainScreenState extends State<MainScreen> {
   // 알림창 왼쪽에 위치, 공지 불러오는 버튼
   Widget _buildMacStyleAlert(double width, double height) {
     return Padding(
-      padding: const EdgeInsets.all(13.0),
+      padding: const EdgeInsets.all(0.0),
       child: Row(
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              ControlButton(
-                isActive: _activeButton == 'general',
-                onPressed: () => _onButtonPressed('general'),
-                buttonText: '일\n반',
-              ),
-              SizedBox(height: 8),
-              ControlButton(
-                isActive: _activeButton == 'school',
-                onPressed: () => _onButtonPressed('school'),
-                buttonText: '학\n사',
-              ),
-              SizedBox(height: 8),
-              ControlButton(
-                isActive: _activeButton == 'employment',
-                onPressed: () => _onButtonPressed('employment'),
-                buttonText: '취\n업',
-              ),
-            ],
+          Container(
+            width: 35, // 버튼의 너비 설정
+            height: height,
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(10),
+            ),
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                // 버튼 텍스트들
+                GestureDetector(
+                  onTap: () => _onButtonPressed('general'),
+                  child: Text(
+                    '일\n반',
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: _activeButton == 'general' ? FontWeight.bold : FontWeight.normal,
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => _onButtonPressed('school'),
+                  child: Text(
+                    '학\n사',
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: _activeButton == 'school' ? FontWeight.bold : FontWeight.normal,
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => _onButtonPressed('employment'),
+                  child: Text(
+                    '취\n업',
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: _activeButton == 'employment' ? FontWeight.bold : FontWeight.normal,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
           // 버튼과 텍스트 영역 사이의 간격
-          SizedBox(width: 10),
+          SizedBox(width: 2),
           Container(
             width: width,
             height: height,
@@ -169,12 +192,9 @@ class _MainScreenState extends State<MainScreen> {
               borderRadius: BorderRadius.circular(15),
             ),
             padding: const EdgeInsets.all(16.0),
-            child: Expanded(
-              child: Text(
-                _apiStatusMessage,
-                // 알림창 텍스트 크기
-                style: TextStyle(fontSize: 18),
-              ),
+            child: Text(
+              _apiStatusMessage,
+              style: TextStyle(fontSize: 18),
             ),
           ),
         ],
@@ -230,42 +250,6 @@ class _MainScreenState extends State<MainScreen> {
   }
 }
 
-// ControlButton StatefulWidget
-class ControlButton extends StatelessWidget {
-  final bool isActive;
-  final VoidCallback onPressed;
-  final String buttonText;
-
-  ControlButton({required this.isActive, required this.onPressed, required this.buttonText});
-
-  // 알림창 공지 불러오는 버튼 ui
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        width: 30, // 버튼 너비
-        height: 50, // 버튼 높이
-        margin: EdgeInsets.only(bottom: 4),
-        decoration: BoxDecoration(
-          // 클릭 시 보이는 버튼 색과 기본 버튼 색
-          color: isActive ? Colors.grey[600] : Colors.grey[200],
-          borderRadius: BorderRadius.circular(10),
-        ),
-        alignment: Alignment.center,
-        child: Text(
-          buttonText,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: isActive ? Colors.white : Colors.black,
-            fontSize: 14,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class WebViewScreen extends StatefulWidget {
   final String url;
   final bool showHomeIcon;
@@ -274,7 +258,7 @@ class WebViewScreen extends StatefulWidget {
   WebViewScreen({
     required this.url,
     this.showHomeIcon = false, // 기본값 설정
-    this.showHeader = true, // 기본값 설정
+    this.showHeader = true,    // 기본값 설정
   });
 
   @override
