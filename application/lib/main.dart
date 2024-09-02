@@ -119,7 +119,7 @@ class _MainScreenState extends State<MainScreen> {
                           ],
                         ),
                         SizedBox(height: spacing * 0.6),
-                        _buildMacStyleAlert(constraints.maxWidth * 0.81, constraints.maxWidth * 0.42),
+                        _buildMacStyleAlert(screenWidth: constraints.maxWidth),
                       ],
                     ),
                   );
@@ -133,9 +133,10 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   // 알림창 왼쪽에 위치, 공지 불러오는 버튼
-  Widget _buildMacStyleAlert(double width, double height) {
-    double screenWidth = MediaQuery.of(context).size.width;
+  Widget _buildMacStyleAlert({required double screenWidth}) {
     double fontSize = screenWidth * 0.04; // 텍스트 크기를 화면 너비의 4%로 설정
+    double containerWidth = screenWidth * 0.81; // 알림창 너비를 화면의 81%로 설정
+    double containerHeight = screenWidth * 0.42; // 알림창 높이를 화면의 42%로 설정
 
     return Padding(
       padding: const EdgeInsets.all(0.0),
@@ -143,7 +144,7 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           Container(
             width: 35, // 버튼의 너비 설정
-            height: height,
+            height: containerHeight,
             decoration: BoxDecoration(
               color: Colors.grey[200],
               borderRadius: BorderRadius.circular(10),
@@ -189,8 +190,8 @@ class _MainScreenState extends State<MainScreen> {
           // 알림창과 텍스트 영역 사이의 간격
           SizedBox(width: 2),
           Container(
-            width: width,
-            height: height,
+            width: containerWidth,
+            height: containerHeight,
             decoration: BoxDecoration(
               color: Colors.grey[200],
               borderRadius: BorderRadius.circular(15),
