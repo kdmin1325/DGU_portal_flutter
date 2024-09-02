@@ -34,7 +34,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  String _apiStatusMessage = '연결 중...'; // 연결 메세지
+  String _apiStatusMessage = '연결 중...'; // 연결 메시지
   String _activeButton = 'general'; // 기본적으로 첫 번째 버튼이 활성화된 상태
 
   @override
@@ -197,7 +197,7 @@ class _MainScreenState extends State<MainScreen> {
               child: RichText(
                 text: TextSpan(
                   children: _buildClickableTextSpans(_apiStatusMessage),
-                  style: TextStyle(fontSize: 14, color: Colors.black),
+                  style: TextStyle(fontSize: 14.5, color: Colors.black),
                 ),
               ),
             ),
@@ -213,17 +213,30 @@ class _MainScreenState extends State<MainScreen> {
     List<String> lines = apiStatusMessage.split('\n');
 
     for (String line in lines) {
-      if (line.contains('(') && line.contains(')')) {
-        // URL이 포함된 경우
-        String url = line.substring(line.indexOf('(') + 1, line.indexOf(')'));
-        String text = line.substring(0, line.indexOf('(')).trim();
+      // URL이 포함된 경우를 찾음
+      int startIdx = line.indexOf('http');
+      if (startIdx != -1) {
+        // URL이 시작되는 위치 이후에 공백이나 닫는 괄호로 URL의 끝을 찾음
+        int endIdx = line.indexOf(' ', startIdx);
+        if (endIdx == -1) {
+          endIdx = line.indexOf(')', startIdx);
+        }
+        if (endIdx == -1) {
+          endIdx = line.length;
+        }
+
+        String url = line.substring(startIdx, endIdx).trim();
+        String text = line.substring(0, startIdx).trim();
+
+        // 출력 에러로 인한 맨 끝에 있는 '(' 제거
+        if (text.endsWith('(')) {
+          text = text.substring(0, text.length - 1).trim();
+        }
 
         spans.add(
           TextSpan(
-            text: '$text\n',
-            style: TextStyle(
-              color: Colors.black,
-            ),
+            text: text.isNotEmpty ? '$text\n' : '\n',  // 텍스트와 URL을 줄바꿈으로 구분
+            style: TextStyle(color: Colors.black),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
                 _openWebView(context, url, false, true);
@@ -254,7 +267,9 @@ class _MainScreenState extends State<MainScreen> {
   // 원형 아이콘 이미지 위젯 처리
   Widget _buildCircleItem(BuildContext context, String assetPath, double iconSize, String? url, bool? showHomeIcon, bool isUniIcon) {
     return GestureDetector(
-      onTap: () => isUniIcon ? _openUniScreen(context) : _openWebView(context, url, showHomeIcon, url == MainUrls.GENERALNOTICE || url == MainUrls.NDRIMS || url == MainUrls.MONEYNOTICE),
+      onTap: () => isUniIcon
+          ? _openUniScreen(context)
+          : _openWebView(context, url, showHomeIcon, url == MainUrls.GENERALNOTICE || url == MainUrls.NDRIMS || url == MainUrls.MONEYNOTICE),
       child: Column(
         children: [
           Image.asset(assetPath, width: iconSize, height: iconSize),
