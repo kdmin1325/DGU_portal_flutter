@@ -12,7 +12,7 @@ class ApiService {
   static Future<String> fetchApiStatus(String buttonColor) async {
     String endpoint;
 
-    // 버튼 색상에 따른 API 엔드포인트 설정
+    // 버튼 타입에 따른 API 엔드포인트 설정
     switch (buttonColor) {
       case 'general':
         endpoint = '/information/generalnotice';
@@ -35,25 +35,35 @@ class ApiService {
       if (jsonResponse is Map<String, dynamic>) {
         StringBuffer output = StringBuffer();
 
-        // 키값이 숫자인 항목들의 벨류값만 가져오기
+        // 키가 숫자인 항목들 리스트에 추가
+        List<String> numericKeys = [];
+
         jsonResponse.forEach((key, value) {
           if (_isNumeric(key)) {
-            String text = value.toString();
-
-            // 최대 길이 설정
-            const int maxLineLength = 28;
-
-            // 문장이 maxLineLength를 넘으면 자르고 '···' 붙이기
-            if (text.length > maxLineLength) {
-              text = '${text.substring(0, maxLineLength)}···';
-            }
-
-            // 각 텍스트를 새로운 줄로 추가
-            output.writeln(text);
+            numericKeys.add(key);
           }
         });
 
-        return output.toString().trim();  // 최종 문자열 반환
+        // 키를 내림차순으로 정렬
+        numericKeys.sort((a, b) => b.compareTo(a));
+
+        // 내림차순으로 정렬된 키에 맞는 값들을 출력
+        for (String key in numericKeys) {
+          String text = jsonResponse[key].toString();
+
+          // 최대 길이 설정
+          const int maxLineLength = 28;
+
+          // 문장이 maxLineLength를 넘으면 자르고 '···' 붙이기
+          if (text.length > maxLineLength) {
+            text = '${text.substring(0, maxLineLength)}···';
+          }
+
+          // 각 텍스트를 새로운 줄로 추가
+          output.writeln(text);
+        }
+
+        return output.toString().trim(); // 최종 문자열 반환
       }
 
       return '데이터 형식이 올바르지 않습니다.';
