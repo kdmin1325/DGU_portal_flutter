@@ -49,18 +49,23 @@ class ApiService {
 
         // 내림차순으로 정렬된 키에 맞는 값들을 출력
         for (String key in numericKeys) {
-          String text = jsonResponse[key].toString();
+          try {
+            String text = jsonResponse[key].toString();
 
-          // 최대 길이 설정
-          const int maxLineLength = 28;
+            // 디버깅용 로그 추가
+            print("Processing Key: $key, Value: $text");
 
-          // 문장이 maxLineLength를 넘으면 자르고 '···' 붙이기
-          if (text.length > maxLineLength) {
-            text = '${text.substring(0, maxLineLength)}···';
+            // URL 생성 - 프로토콜 포함
+            String url = jsonResponse['link'] + key;
+            if (!url.startsWith('http')) {
+              url = 'http://' + url; // http 프로토콜 추가
+            }
+
+            // 각 텍스트를 새로운 줄로 추가하고, URL 연결
+            output.writeln('$text ($url)');
+          } catch (e) {
+            print("Error processing key $key: $e");
           }
-
-          // 각 텍스트를 새로운 줄로 추가
-          output.writeln(text);
         }
 
         return output.toString().trim(); // 최종 문자열 반환

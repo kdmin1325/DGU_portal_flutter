@@ -1,6 +1,7 @@
 import 'package:application/utils/img_assets.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'uni.dart';
 import '../service/api_service.dart';
@@ -191,15 +192,51 @@ class _MainScreenState extends State<MainScreen> {
               color: Colors.grey[200],
               borderRadius: BorderRadius.circular(15),
             ),
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              _apiStatusMessage,
-              style: TextStyle(fontSize: 18),
+            padding: const EdgeInsets.all(14.0),
+            child: SingleChildScrollView(
+              child: RichText(
+                text: TextSpan(
+                  children: _buildClickableTextSpans(_apiStatusMessage),
+                  style: TextStyle(fontSize: 14, color: Colors.black),
+                ),
+              ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  // 클릭 가능한 텍스트 스팬 리스트를 생성하는 메서드
+  List<TextSpan> _buildClickableTextSpans(String apiStatusMessage) {
+    List<TextSpan> spans = [];
+    List<String> lines = apiStatusMessage.split('\n');
+
+    for (String line in lines) {
+      if (line.contains('(') && line.contains(')')) {
+        // URL이 포함된 경우
+        String url = line.substring(line.indexOf('(') + 1, line.indexOf(')'));
+        String text = line.substring(0, line.indexOf('(')).trim();
+
+        spans.add(
+          TextSpan(
+            text: '$text\n',
+            style: TextStyle(
+              color: Colors.black,
+            ),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                _openWebView(context, url, false, true);
+              },
+          ),
+        );
+      } else {
+        // 일반 텍스트인 경우
+        spans.add(TextSpan(text: '$line\n'));
+      }
+    }
+
+    return spans;
   }
 
   // 사각 아이콘 이미지 위젯 처리
@@ -273,6 +310,13 @@ class _WebViewScreenState extends State<WebViewScreen> {
   void initState() {
     super.initState();
     _controller = WebViewController();
+
+    // 스킴 확인 및 추가
+    String processedUrl = widget.url;
+    if (!processedUrl.startsWith(RegExp(r'https?://'))) {
+      processedUrl = 'http://' + processedUrl;
+    }
+
     _controller.setJavaScriptMode(JavaScriptMode.unrestricted);
     _controller.setNavigationDelegate(
       NavigationDelegate(
@@ -291,7 +335,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
         },
       ),
     );
-    _controller.loadRequest(Uri.parse(widget.url));
+    _controller.loadRequest(Uri.parse(processedUrl));
   }
 
   @override
