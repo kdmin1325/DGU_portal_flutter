@@ -134,6 +134,9 @@ class _MainScreenState extends State<MainScreen> {
 
   // 알림창 왼쪽에 위치, 공지 불러오는 버튼
   Widget _buildMacStyleAlert(double width, double height) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double fontSize = screenWidth * 0.04; // 텍스트 크기를 화면 너비의 4%로 설정
+
     return Padding(
       padding: const EdgeInsets.all(0.0),
       child: Row(
@@ -155,7 +158,7 @@ class _MainScreenState extends State<MainScreen> {
                   child: Text(
                     '일\n반',
                     style: TextStyle(
-                      fontSize: 17,
+                      fontSize: fontSize, // 동적으로 텍스트 크기 설정
                       fontWeight: _activeButton == 'general' ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
@@ -165,7 +168,7 @@ class _MainScreenState extends State<MainScreen> {
                   child: Text(
                     '학\n사',
                     style: TextStyle(
-                      fontSize: 17,
+                      fontSize: fontSize, // 동적으로 텍스트 크기 설정
                       fontWeight: _activeButton == 'school' ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
@@ -175,7 +178,7 @@ class _MainScreenState extends State<MainScreen> {
                   child: Text(
                     '취\n업',
                     style: TextStyle(
-                      fontSize: 17,
+                      fontSize: fontSize, // 동적으로 텍스트 크기 설정
                       fontWeight: _activeButton == 'employment' ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
@@ -197,7 +200,7 @@ class _MainScreenState extends State<MainScreen> {
               child: RichText(
                 text: TextSpan(
                   children: _buildClickableTextSpans(_apiStatusMessage),
-                  style: TextStyle(fontSize: 14.5, color: Colors.black),
+                  style: TextStyle(fontSize: fontSize * 0.9, color: Colors.black), // 동적으로 텍스트 크기 설정
                 ),
               ),
             ),
