@@ -49,10 +49,10 @@ class UniScreen extends StatelessWidget {
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               children: [
-                                _buildGridItem(context, ImgAssets.Engineer, squareIconSize, UniUrls.ENGINEER),
-                                _buildGridItem(context, ImgAssets.book, squareIconSize, UniUrls.BOOK),
-                                _buildGridItem(context, ImgAssets.nurse, squareIconSize, UniUrls.NURSING),
-                                _buildGridItem(context, ImgAssets.buddhist, squareIconSize, UniUrls.BUDDHIST),
+                                _buildGridItem(context, ImgAssets.Engineer, squareIconSize, UniUrls.ENGINEER, true),
+                                _buildGridItem(context, ImgAssets.book, squareIconSize, UniUrls.BOOK, true),
+                                _buildGridItem(context, ImgAssets.nurse, squareIconSize, UniUrls.NURSING, true),
+                                _buildGridItem(context, ImgAssets.buddhist, squareIconSize, UniUrls.BUDDHIST, true),
                               ],
                             ),
                             SizedBox(height: spacing * 0.3),
@@ -65,14 +65,14 @@ class UniScreen extends StatelessWidget {
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               children: [
-                                _buildGridItem(context, ImgAssets.hotelcook, squareIconSize / 2, UniUrls.COOK),
-                                _buildGridItem(context, ImgAssets.hotel, squareIconSize / 2, UniUrls.HOTEL),
-                                _buildGridItem(context, ImgAssets.police, squareIconSize / 2, UniUrls.POLICE),
-                                _buildGridItem(context, ImgAssets.air, squareIconSize / 2, UniUrls.AIR),
-                                _buildGridItem(context, ImgAssets.eco, squareIconSize / 2, UniUrls.ECO),
-                                _buildGridItem(context, ImgAssets.openmajor, squareIconSize / 2, UniUrls.OPENMAJOR),
-                                _buildGridItem(context, ImgAssets.orient, squareIconSize / 2, UniUrls.ORIENT),
-                                _buildGridItem(context, ImgAssets.medical, squareIconSize / 2, UniUrls.MEDICAL),
+                                _buildGridItem(context, ImgAssets.hotelcook, squareIconSize / 2, UniUrls.COOK, false),
+                                _buildGridItem(context, ImgAssets.hotel, squareIconSize / 2, UniUrls.HOTEL, false),
+                                _buildGridItem(context, ImgAssets.police, squareIconSize / 2, UniUrls.POLICE, false),
+                                _buildGridItem(context, ImgAssets.air, squareIconSize / 2, UniUrls.AIR, false),
+                                _buildGridItem(context, ImgAssets.eco, squareIconSize / 2, UniUrls.ECO, false),
+                                _buildGridItem(context, ImgAssets.openmajor, squareIconSize / 2, UniUrls.OPENMAJOR, false),
+                                _buildGridItem(context, ImgAssets.orient, squareIconSize / 2, UniUrls.ORIENT, false),
+                                _buildGridItem(context, ImgAssets.medical, squareIconSize / 2, UniUrls.MEDICAL, false),
                               ],
                             ),
                           ],
@@ -89,9 +89,11 @@ class UniScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildGridItem(BuildContext context, String assetPath, double iconSize, String? url) {
+  Widget _buildGridItem(BuildContext context, String assetPath, double iconSize, String? url, bool showListButton) {
     return GestureDetector(
-      onTap: () => _openWebView(context, url),
+      onTap: () {
+        _openWebView(context, url, showListButton);
+      },
       child: Center(
         child: Image.asset(assetPath, width: iconSize, height: iconSize),
       ),
@@ -100,29 +102,31 @@ class UniScreen extends StatelessWidget {
 
   Widget _buildWideItem(BuildContext context, String assetPath, double iconHeight, String? url) {
     return GestureDetector(
-      onTap: () => _openWebView(context, url),
+      onTap: () => _openWebView(context, url, false),
       child: Center(
         child: Image.asset(assetPath, height: iconHeight),
       ),
     );
   }
 
-  void _openWebView(BuildContext context, String? url) {
-    if (url != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => WebViewScreen(url: url)),
-      );
-    } else {
-      print('URL is null');
-    }
+  void _openWebView(BuildContext context, String? url, bool showListButton) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WebViewScreen(
+          url: url ?? '',
+          showListButton: showListButton,
+        ),
+      ),
+    );
   }
 }
 
 class WebViewScreen extends StatefulWidget {
   final String url;
+  final bool showListButton;
 
-  WebViewScreen({required this.url});
+  WebViewScreen({required this.url, required this.showListButton});
 
   @override
   _WebViewScreenState createState() => _WebViewScreenState();
@@ -208,58 +212,61 @@ class _WebViewScreenState extends State<WebViewScreen> with SingleTickerProvider
               ),
               if (_isLoading)
                 Center(child: CircularProgressIndicator()),
-              Positioned(
-                right: 27,
-                bottom: 100 + 55, // listbutton의 높이 추가
-                child: Container(
-                  width: 200,
-                  height: _heightAnimation.value,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 10,
-                        offset: Offset(0, 5),
-                      ),
-                    ],
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: ListView.builder(
-                      controller: _scrollController, // 스크롤 컨트롤러 지정
-                      padding: EdgeInsets.all(0), // 패딩 제거
-                      itemCount: 9,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            ListTile(
-                              title: Text(_getListTileTitle(index)),
-                              contentPadding: EdgeInsets.symmetric(horizontal: 16.0), // 패딩 설정
-                            ),
-                            if (index < 8)
-                              Divider(
-                                color: Colors.grey,
-                                thickness: 1,
-                                height: 1,
-                              ), // 구분선 양옆에 공백 없이 설정
-                          ],
-                        );
-                      },
+              if (widget.showListButton) // showListButton이 true일 때만 리스트 버튼 및 리스트 표시
+                Positioned(
+                  right: 27,
+                  bottom: 100 + 55, // listbutton의 높이 추가
+                  child: _isListVisible
+                      ? Container(
+                    width: 200,
+                    height: _heightAnimation.value,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 10,
+                          offset: Offset(0, 5),
+                        ),
+                      ],
                     ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: ListView.builder(
+                        controller: _scrollController, // 스크롤 컨트롤러 지정
+                        padding: EdgeInsets.all(0), // 패딩 제거
+                        itemCount: 9,
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              ListTile(
+                                title: Text(_getListTileTitle(index)),
+                                contentPadding: EdgeInsets.symmetric(horizontal: 16.0), // 패딩 설정
+                              ),
+                              if (index < 8)
+                                Divider(
+                                  color: Colors.grey,
+                                  thickness: 1,
+                                  height: 1,
+                                ), // 구분선 양옆에 공백 없이 설정
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  )
+                      : SizedBox.shrink(), // 리스트가 숨겨진 상태에서는 아무것도 표시하지 않음
+                ),
+              if (widget.showListButton)
+                Positioned(
+                  right: 27,
+                  bottom: 100,
+                  child: GestureDetector(
+                    onTap: _toggleListVisibility, // 리스트 토글 기능 추가
+                    child: Image.asset(ImgAssets.listbutton, width: 55, height: 55),
                   ),
                 ),
-              ),
-              Positioned(
-                right: 27,
-                bottom: 100,
-                child: GestureDetector(
-                  onTap: _toggleListVisibility, // 리스트 토글 기능 추가
-                  child: Image.asset(
-                      ImgAssets.listbutton, width: 55, height: 55),
-                ),
-              ),
               Positioned(
                 right: 20,
                 bottom: 20,
