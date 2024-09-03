@@ -70,7 +70,7 @@ class Nurse {
 
 // 불교대학 리스트 url
 class Buddhist {
-  static const String buddhist = 'https://buddhist.dongguk.ac.kr/'; // 불교학전ㄴ공
+  static const String buddhist = 'https://buddhist.dongguk.ac.kr/'; // 불교학전공
   static const String bcc = 'https://bcc.dongguk.ac.kr/'; // 불교문화컨텐츠전공
   static const String mpc = 'https://mpc.dongguk.ac.kr/'; // 영상심리상담학과
   static const String kormusic = 'https://kormusic.dongguk.ac.kr/'; // 한국음익과
