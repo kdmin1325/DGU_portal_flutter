@@ -177,13 +177,23 @@ class _WebViewScreenState extends State<WebViewScreen> {
               if (_isLoading)
                 Center(child: CircularProgressIndicator()),
               Positioned(
+                right: 27,
+                bottom: 100,
+                child: GestureDetector(
+                  onTap: () {
+                    // Handle list button tap
+                  },
+                  child: Image.asset(ImgAssets.listbutton, width: 55, height: 55), // 리스트 버튼
+                ),
+              ),
+              Positioned(
                 right: 20,
                 bottom: 20,
                 child: GestureDetector(
                   onTap: () {
                     Navigator.popUntil(context, (route) => route.isFirst);
                   },
-                  child: Image.asset(ImageAssets.home, width: 70, height: 70),
+                  child: Image.asset(ImageAssets.home, width: 70, height: 70), // 홈버튼
                 ),
               ),
             ],
