@@ -49,14 +49,14 @@ class UniScreen extends StatelessWidget {
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               children: [
-                                _buildGridItem(context, ImgAssets.Engineer, squareIconSize, UniUrls.ENGINEER, true),
-                                _buildGridItem(context, ImgAssets.book, squareIconSize, UniUrls.BOOK, true),
-                                _buildGridItem(context, ImgAssets.nurse, squareIconSize, UniUrls.NURSING, true),
-                                _buildGridItem(context, ImgAssets.buddhist, squareIconSize, UniUrls.BUDDHIST, true),
+                                _buildGridItem(context, ImgAssets.Engineer, squareIconSize, UniUrls.ENGINEER, true, constraints),
+                                _buildGridItem(context, ImgAssets.book, squareIconSize, UniUrls.BOOK, true, constraints),
+                                _buildGridItem(context, ImgAssets.nurse, squareIconSize, UniUrls.NURSING, true, constraints),
+                                _buildGridItem(context, ImgAssets.buddhist, squareIconSize, UniUrls.BUDDHIST, true, constraints),
                               ],
                             ),
                             SizedBox(height: spacing * 0.3),
-                            _buildWideItem(context, ImgAssets.computer, wideIconHeight, UniUrls.COMPUTER),
+                            _buildWideItem(context, ImgAssets.computer, wideIconHeight, UniUrls.COMPUTER, constraints),
                             SizedBox(height: spacing * 0.6),
                             GridView.count(
                               crossAxisCount: 4,
@@ -65,14 +65,14 @@ class UniScreen extends StatelessWidget {
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               children: [
-                                _buildGridItem(context, ImgAssets.hotelcook, squareIconSize / 2, UniUrls.COOK, false),
-                                _buildGridItem(context, ImgAssets.hotel, squareIconSize / 2, UniUrls.HOTEL, false),
-                                _buildGridItem(context, ImgAssets.police, squareIconSize / 2, UniUrls.POLICE, false),
-                                _buildGridItem(context, ImgAssets.air, squareIconSize / 2, UniUrls.AIR, false),
-                                _buildGridItem(context, ImgAssets.eco, squareIconSize / 2, UniUrls.ECO, false),
-                                _buildGridItem(context, ImgAssets.openmajor, squareIconSize / 2, UniUrls.OPENMAJOR, false),
-                                _buildGridItem(context, ImgAssets.orient, squareIconSize / 2, UniUrls.ORIENT, false),
-                                _buildGridItem(context, ImgAssets.medical, squareIconSize / 2, UniUrls.MEDICAL, false),
+                                _buildGridItem(context, ImgAssets.hotelcook, squareIconSize / 2, UniUrls.COOK, false, constraints),
+                                _buildGridItem(context, ImgAssets.hotel, squareIconSize / 2, UniUrls.HOTEL, false, constraints),
+                                _buildGridItem(context, ImgAssets.police, squareIconSize / 2, UniUrls.POLICE, false, constraints),
+                                _buildGridItem(context, ImgAssets.air, squareIconSize / 2, UniUrls.AIR, false, constraints),
+                                _buildGridItem(context, ImgAssets.eco, squareIconSize / 2, UniUrls.ECO, false, constraints),
+                                _buildGridItem(context, ImgAssets.openmajor, squareIconSize / 2, UniUrls.OPENMAJOR, false, constraints),
+                                _buildGridItem(context, ImgAssets.orient, squareIconSize / 2, UniUrls.ORIENT, false, constraints),
+                                _buildGridItem(context, ImgAssets.medical, squareIconSize / 2, UniUrls.MEDICAL, false, constraints),
                               ],
                             ),
                           ],
@@ -89,22 +89,24 @@ class UniScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildGridItem(BuildContext context, String assetPath, double iconSize, String? url, bool showListButton) {
+  Widget _buildGridItem(BuildContext context, String assetPath, double iconSize, String? url, bool showListButton, BoxConstraints constraints) {
+    double adjustedIconSize = constraints.maxWidth * 0.4;
     return GestureDetector(
       onTap: () {
         _openWebView(context, url, showListButton);
       },
       child: Center(
-        child: Image.asset(assetPath, width: iconSize, height: iconSize),
+        child: Image.asset(assetPath, width: adjustedIconSize, height: adjustedIconSize),
       ),
     );
   }
 
-  Widget _buildWideItem(BuildContext context, String assetPath, double iconHeight, String? url) {
+  Widget _buildWideItem(BuildContext context, String assetPath, double iconHeight, String? url, BoxConstraints constraints) {
+    double adjustedIconHeight = constraints.maxWidth * 0.2;
     return GestureDetector(
       onTap: () => _openWebView(context, url, false),
       child: Center(
-        child: Image.asset(assetPath, height: iconHeight),
+        child: Image.asset(assetPath, height: adjustedIconHeight),
       ),
     );
   }
@@ -145,25 +147,26 @@ class _WebViewScreenState extends State<WebViewScreen> with SingleTickerProvider
   void initState() {
     super.initState();
     _controller = WebViewController();
-    _controller.setJavaScriptMode(JavaScriptMode.unrestricted);
-    _controller.setNavigationDelegate(
-      NavigationDelegate(
-        onPageStarted: (String url) {
-          setState(() {
-            _isLoading = true;
-          });
-        },
-        onPageFinished: (String url) {
-          setState(() {
-            _isLoading = false;
-          });
-        },
-        onWebResourceError: (WebResourceError error) {
-          print('Page resource error: ${error.description}');
-        },
-      ),
-    );
-    _controller.loadRequest(Uri.parse(widget.url));
+    _controller
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onPageStarted: (String url) {
+            setState(() {
+              _isLoading = true;
+            });
+          },
+          onPageFinished: (String url) {
+            setState(() {
+              _isLoading = false;
+            });
+          },
+          onWebResourceError: (WebResourceError error) {
+            print('Page resource error: ${error.description}');
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(widget.url));
 
     _animationController = AnimationController(
       duration: Duration(milliseconds: 300),
@@ -181,7 +184,7 @@ class _WebViewScreenState extends State<WebViewScreen> with SingleTickerProvider
     if (_isListVisible) {
       _animationController.reverse();
     } else {
-      _scrollController = ScrollController(); // 새로운 ScrollController 생성
+      _scrollController = ScrollController();
       _animationController.forward();
     }
     setState(() {
@@ -189,20 +192,22 @@ class _WebViewScreenState extends State<WebViewScreen> with SingleTickerProvider
     });
   }
 
-  // 리스트 닫는 동작 수행
   Future<bool> _onWillPop() async {
-    if (_isListVisible) {
-      _toggleListVisibility(); // 리스트가 열려 있을 때는 리스트를 닫음
+    if (await _controller.canGoBack()) {
+      _controller.goBack();
+      return false;
+    } else if (_isListVisible) {
+      _toggleListVisibility();
       return false;
     } else {
-      return true; // 리스트가 닫혀 있을 때는 원래의 뒤로 가기 동작 수행
+      return true;
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: _onWillPop, // 뒤로 가기 버튼 핸들링
+      onWillPop: _onWillPop,
       child: Scaffold(
         body: SafeArea(
           child: Stack(
@@ -212,10 +217,10 @@ class _WebViewScreenState extends State<WebViewScreen> with SingleTickerProvider
               ),
               if (_isLoading)
                 Center(child: CircularProgressIndicator()),
-              if (widget.showListButton) // showListButton이 true일 때만 리스트 버튼 및 리스트 표시
+              if (widget.showListButton)
                 Positioned(
                   right: 27,
-                  bottom: 100 + 55, // listbutton의 높이 추가
+                  bottom: 100 + 55,
                   child: _isListVisible
                       ? Container(
                     width: 200,
@@ -234,36 +239,36 @@ class _WebViewScreenState extends State<WebViewScreen> with SingleTickerProvider
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: ListView.builder(
-                        controller: _scrollController, // 스크롤 컨트롤러 지정
-                        padding: EdgeInsets.all(0), // 패딩 제거
+                        controller: _scrollController,
+                        padding: EdgeInsets.all(0),
                         itemCount: 9,
                         itemBuilder: (context, index) {
                           return Column(
                             children: [
                               ListTile(
                                 title: Text(_getListTileTitle(index)),
-                                contentPadding: EdgeInsets.symmetric(horizontal: 16.0), // 패딩 설정
+                                contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
                               ),
                               if (index < 8)
                                 Divider(
                                   color: Colors.grey,
                                   thickness: 1,
                                   height: 1,
-                                ), // 구분선 양옆에 공백 없이 설정
+                                ),
                             ],
                           );
                         },
                       ),
                     ),
                   )
-                      : SizedBox.shrink(), // 리스트가 숨겨진 상태에서는 아무것도 표시하지 않음
+                      : SizedBox.shrink(),
                 ),
               if (widget.showListButton)
                 Positioned(
                   right: 27,
                   bottom: 100,
                   child: GestureDetector(
-                    onTap: _toggleListVisibility, // 리스트 토글 기능 추가
+                    onTap: _toggleListVisibility,
                     child: Image.asset(ImgAssets.listbutton, width: 55, height: 55),
                   ),
                 ),
@@ -285,7 +290,6 @@ class _WebViewScreenState extends State<WebViewScreen> with SingleTickerProvider
   }
 
   String _getListTileTitle(int index) {
-    // ListTile에 표시될 텍스트를 반환하는 메서드
     List<String> titles = [
       '디자인미술학과',
       '바이오제약공학과',
