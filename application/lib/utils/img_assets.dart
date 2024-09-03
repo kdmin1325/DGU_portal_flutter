@@ -24,4 +24,5 @@ class ImgAssets {
   static const String openmajor = 'assets/frame.png';
   static const String orient = 'assets/k_medi.png';
   static const String medical = 'assets/medi.png';
+  static const String listbutton = 'assets/listbutton.png';
 }
