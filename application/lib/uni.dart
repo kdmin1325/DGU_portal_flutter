@@ -1,3 +1,4 @@
+import 'package:application/utils/img_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../utils/urls.dart';
@@ -21,7 +22,7 @@ class UniScreen extends StatelessWidget {
                     onTap: () {
                       Navigator.popUntil(context, (route) => route.isFirst);
                     },
-                    child: Image.asset('assets/dgumain.png', height: MediaQuery.of(context).size.height * 0.06),
+                    child: Image.asset(ImageAssets.dgumain, height: MediaQuery.of(context).size.height * 0.06),
                   ),
                 ),
                 automaticallyImplyLeading: false,
@@ -48,14 +49,14 @@ class UniScreen extends StatelessWidget {
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               children: [
-                                _buildGridItem(context, 'assets/en_uni.png', squareIconSize, UniUrls.ENGINEER),
-                                _buildGridItem(context, 'assets/book_uni.png', squareIconSize, UniUrls.BOOK),
-                                _buildGridItem(context, 'assets/nu_uni.png', squareIconSize, UniUrls.NURSING),
-                                _buildGridItem(context, 'assets/bot_uni.png', squareIconSize, UniUrls.BUDDHIST),
+                                _buildGridItem(context, ImgAssets.English, squareIconSize, UniUrls.ENGINEER),
+                                _buildGridItem(context, ImgAssets.book, squareIconSize, UniUrls.BOOK),
+                                _buildGridItem(context, ImgAssets.nurse, squareIconSize, UniUrls.NURSING),
+                                _buildGridItem(context, ImgAssets.buddhist, squareIconSize, UniUrls.BUDDHIST),
                               ],
                             ),
                             SizedBox(height: spacing * 0.3),
-                            _buildWideItem(context, 'assets/computer.png', wideIconHeight, UniUrls.COMPUTER),
+                            _buildWideItem(context, ImgAssets.computer, wideIconHeight, UniUrls.COMPUTER),
                             SizedBox(height: spacing * 0.6),
                             GridView.count(
                               crossAxisCount: 4,
@@ -64,14 +65,14 @@ class UniScreen extends StatelessWidget {
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               children: [
-                                _buildGridItem(context, 'assets/hotel_cook.png', squareIconSize / 2, UniUrls.COOK),
-                                _buildGridItem(context, 'assets/hotel_hotel.png', squareIconSize / 2, UniUrls.HOTEL),
-                                _buildGridItem(context, 'assets/pol.png', squareIconSize / 2, UniUrls.POLICE),
-                                _buildGridItem(context, 'assets/air.png', squareIconSize / 2, UniUrls.AIR),
-                                _buildGridItem(context, 'assets/eco.png', squareIconSize / 2, UniUrls.ECO),
-                                _buildGridItem(context, 'assets/frame.png', squareIconSize / 2, UniUrls.OPENMAJOR),
-                                _buildGridItem(context, 'assets/k_medi.png', squareIconSize / 2, UniUrls.ORIENT),
-                                _buildGridItem(context, 'assets/medi.png', squareIconSize / 2, UniUrls.MEDICAL),
+                                _buildGridItem(context, ImgAssets.hotelcook, squareIconSize / 2, UniUrls.COOK),
+                                _buildGridItem(context, ImgAssets.hotel, squareIconSize / 2, UniUrls.HOTEL),
+                                _buildGridItem(context, ImgAssets.police, squareIconSize / 2, UniUrls.POLICE),
+                                _buildGridItem(context, ImgAssets.air, squareIconSize / 2, UniUrls.AIR),
+                                _buildGridItem(context, ImgAssets.eco, squareIconSize / 2, UniUrls.ECO),
+                                _buildGridItem(context, ImgAssets.openmajor, squareIconSize / 2, UniUrls.OPENMAJOR),
+                                _buildGridItem(context, ImgAssets.orient, squareIconSize / 2, UniUrls.ORIENT),
+                                _buildGridItem(context, ImgAssets.medical, squareIconSize / 2, UniUrls.MEDICAL),
                               ],
                             ),
                           ],
@@ -182,7 +183,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                   onTap: () {
                     Navigator.popUntil(context, (route) => route.isFirst);
                   },
-                  child: Image.asset('assets/home.png', width: 70, height: 70),
+                  child: Image.asset(ImageAssets.home, width: 70, height: 70),
                 ),
               ),
             ],
