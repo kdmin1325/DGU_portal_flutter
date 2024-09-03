@@ -49,7 +49,7 @@ class UniScreen extends StatelessWidget {
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               children: [
-                                _buildGridItem(context, ImgAssets.English, squareIconSize, UniUrls.ENGINEER),
+                                _buildGridItem(context, ImgAssets.Engineer, squareIconSize, UniUrls.ENGINEER),
                                 _buildGridItem(context, ImgAssets.book, squareIconSize, UniUrls.BOOK),
                                 _buildGridItem(context, ImgAssets.nurse, squareIconSize, UniUrls.NURSING),
                                 _buildGridItem(context, ImgAssets.buddhist, squareIconSize, UniUrls.BUDDHIST),

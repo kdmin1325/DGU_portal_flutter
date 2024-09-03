@@ -11,7 +11,7 @@ class ImageAssets {
 }
 
 class ImgAssets {
-  static const String English = 'assets/en_uni.png';
+  static const String Engineer = 'assets/en_uni.png';
   static const String book = 'assets/book_uni.png';
   static const String nurse = 'assets/nu_uni.png';
   static const String buddhist = 'assets/bot_uni.png';
