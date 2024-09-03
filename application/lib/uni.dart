@@ -128,9 +128,14 @@ class WebViewScreen extends StatefulWidget {
   _WebViewScreenState createState() => _WebViewScreenState();
 }
 
-class _WebViewScreenState extends State<WebViewScreen> {
+class _WebViewScreenState extends State<WebViewScreen> with SingleTickerProviderStateMixin {
   late WebViewController _controller;
   bool _isLoading = true;
+  bool _isListVisible = false;
+
+  late AnimationController _animationController;
+  late Animation<double> _heightAnimation;
+  ScrollController? _scrollController;
 
   @override
   void initState() {
@@ -155,18 +160,45 @@ class _WebViewScreenState extends State<WebViewScreen> {
       ),
     );
     _controller.loadRequest(Uri.parse(widget.url));
+
+    _animationController = AnimationController(
+      duration: Duration(milliseconds: 300),
+      vsync: this,
+    );
+
+    _heightAnimation =
+    Tween<double>(begin: 0, end: 375).animate(_animationController)
+      ..addListener(() {
+        setState(() {});
+      });
+  }
+
+  void _toggleListVisibility() {
+    if (_isListVisible) {
+      _animationController.reverse();
+    } else {
+      _scrollController = ScrollController(); // 새로운 ScrollController 생성
+      _animationController.forward();
+    }
+    setState(() {
+      _isListVisible = !_isListVisible;
+    });
+  }
+
+  // 리스트 닫는 동작 수행
+  Future<bool> _onWillPop() async {
+    if (_isListVisible) {
+      _toggleListVisibility(); // 리스트가 열려 있을 때는 리스트를 닫음
+      return false;
+    } else {
+      return true; // 리스트가 닫혀 있을 때는 원래의 뒤로 가기 동작 수행
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-      onWillPop: () async {
-        if (await _controller.canGoBack()) {
-          _controller.goBack();
-          return false;
-        }
-        return true;
-      },
+      onWillPop: _onWillPop, // 뒤로 가기 버튼 핸들링
       child: Scaffold(
         body: SafeArea(
           child: Stack(
@@ -178,12 +210,54 @@ class _WebViewScreenState extends State<WebViewScreen> {
                 Center(child: CircularProgressIndicator()),
               Positioned(
                 right: 27,
+                bottom: 100 + 55, // listbutton의 높이 추가
+                child: Container(
+                  width: 200,
+                  height: _heightAnimation.value,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 10,
+                        offset: Offset(0, 5),
+                      ),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: ListView.builder(
+                      controller: _scrollController, // 스크롤 컨트롤러 지정
+                      padding: EdgeInsets.all(0), // 패딩 제거
+                      itemCount: 9,
+                      itemBuilder: (context, index) {
+                        return Column(
+                          children: [
+                            ListTile(
+                              title: Text(_getListTileTitle(index)),
+                              contentPadding: EdgeInsets.symmetric(horizontal: 16.0), // 패딩 설정
+                            ),
+                            if (index < 8)
+                              Divider(
+                                color: Colors.grey,
+                                thickness: 1,
+                                height: 1,
+                              ), // 구분선 양옆에 공백 없이 설정
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                right: 27,
                 bottom: 100,
                 child: GestureDetector(
-                  onTap: () {
-                    // Handle list button tap
-                  },
-                  child: Image.asset(ImgAssets.listbutton, width: 55, height: 55), // 리스트 버튼
+                  onTap: _toggleListVisibility, // 리스트 토글 기능 추가
+                  child: Image.asset(
+                      ImgAssets.listbutton, width: 55, height: 55),
                 ),
               ),
               Positioned(
@@ -193,7 +267,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                   onTap: () {
                     Navigator.popUntil(context, (route) => route.isFirst);
                   },
-                  child: Image.asset(ImageAssets.home, width: 70, height: 70), // 홈버튼
+                  child: Image.asset(ImageAssets.home, width: 70, height: 70),
                 ),
               ),
             ],
@@ -201,5 +275,21 @@ class _WebViewScreenState extends State<WebViewScreen> {
         ),
       ),
     );
+  }
+
+  String _getListTileTitle(int index) {
+    // ListTile에 표시될 텍스트를 반환하는 메서드
+    List<String> titles = [
+      '디자인미술학과',
+      '바이오제약공학과',
+      '전자정보통신공학전공',
+      '에너지·전기공학전공',
+      '자동차소재부품공학과',
+      '인공지능전공',
+      '소방방재전공',
+      '조경전공',
+      '정원디자인전공',
+    ];
+    return titles[index];
   }
 }
