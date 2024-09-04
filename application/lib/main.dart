@@ -146,6 +146,9 @@ class _MainScreenState extends State<MainScreen> {
       child: Row(
         children: [
           Container(
+            // ios 알림창 크기
+            // width: 30;
+            // android 알림창 크기
             width: 35,
             height: containerHeight,
             decoration: BoxDecoration(
