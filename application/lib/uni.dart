@@ -36,6 +36,7 @@ class UniScreen extends StatelessWidget {
                   double spacing = constraints.maxWidth * 0.05;
                   double wideIconHeight = squareIconSize * 0.5;
 
+                  // 단과대 화면 아이콘
                   return Padding(
                     padding: EdgeInsets.all(spacing),
                     child: ListView(
@@ -111,6 +112,7 @@ class UniScreen extends StatelessWidget {
     );
   }
 
+  // 웹뷰 함수
   void _openWebView(BuildContext context, String? url, String listTitle, bool showHomeButton) {
     Navigator.push(
       context,
@@ -187,9 +189,9 @@ class _WebViewScreenState extends State<WebViewScreen> with SingleTickerProvider
   double _calculateListHeight(String listTitle) {
     switch (listTitle) {
       case '간호대학':
-        return 230;  // 간호대학 리스트 높이 조정
+        return 230;  // 간호대학 리스트 높이
       case '불교대학':
-        return 230;  // 불교대학 리스트 높이 조정
+        return 230;  // 불교대학 리스트 높이
       default:
         return 375;  // 기본 리스트 높이
     }
@@ -379,6 +381,7 @@ class _WebViewScreenState extends State<WebViewScreen> with SingleTickerProvider
     }
   }
 
+  // 웹뷰 리스트
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -395,7 +398,7 @@ class _WebViewScreenState extends State<WebViewScreen> with SingleTickerProvider
               if (widget.listTitle.isNotEmpty)
                 Positioned(
                   right: 20,
-                  bottom: 75,  // 원래 홈버튼 위치로 이동
+                  bottom: 75,
                   child: _isListVisible
                       ? Container(
                     width: 200,
@@ -441,7 +444,7 @@ class _WebViewScreenState extends State<WebViewScreen> with SingleTickerProvider
                 ),
               if (widget.listTitle.isNotEmpty)
                 Positioned(
-                  right: 20,  // listbutton을 홈버튼 위치로 이동
+                  right: 20,
                   bottom: 20,
                   child: GestureDetector(
                     onTap: _toggleListVisibility,
