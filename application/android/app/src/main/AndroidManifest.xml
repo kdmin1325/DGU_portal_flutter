@@ -3,9 +3,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:label="application"
+        android:label="DG portal"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/appicon"
         android:usesCleartextTraffic="true"> <!-- HTTP 트래픽 허용 -->
         <activity
             android:name=".MainActivity"
