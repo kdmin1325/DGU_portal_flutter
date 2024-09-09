@@ -15,14 +15,14 @@ class UniScreen extends StatelessWidget {
             PreferredSize(
               preferredSize: Size.fromHeight(MediaQuery.of(context).size.height * 0.1),
               child: AppBar(
-                backgroundColor: Color(0xFFF89805),
+                backgroundColor: Color(0xFFF89805), // 헤더
                 toolbarHeight: MediaQuery.of(context).size.height * 0.10,
                 title: Center(
                   child: GestureDetector(
                     onTap: () {
                       Navigator.popUntil(context, (route) => route.isFirst);
                     },
-                    child: Image.asset(ImageAssets.dgumain, height: MediaQuery.of(context).size.height * 0.06),
+                    child: Image.asset(ImageAssets.dgumain, height: MediaQuery.of(context).size.height * 0.06), // 로고
                   ),
                 ),
                 automaticallyImplyLeading: false,
@@ -66,14 +66,14 @@ class UniScreen extends StatelessWidget {
                               shrinkWrap: true,
                               physics: NeverScrollableScrollPhysics(),
                               children: [
-                                _buildGridItem(context, ImgAssets.hotelcook, squareIconSize / 2, UniUrls.COOK, "", true, constraints),
-                                _buildGridItem(context, ImgAssets.hotel, squareIconSize / 2, UniUrls.HOTEL, "", true, constraints),
-                                _buildGridItem(context, ImgAssets.police, squareIconSize / 2, UniUrls.POLICE, "", true, constraints),
-                                _buildGridItem(context, ImgAssets.air, squareIconSize / 2, UniUrls.AIR, "", true, constraints),
-                                _buildGridItem(context, ImgAssets.eco, squareIconSize / 2, UniUrls.ECO, "", true, constraints),
-                                _buildGridItem(context, ImgAssets.openmajor, squareIconSize / 2, UniUrls.OPENMAJOR, "", true, constraints),
-                                _buildGridItem(context, ImgAssets.orient, squareIconSize / 2, UniUrls.ORIENT, "", true, constraints),
-                                _buildGridItem(context, ImgAssets.medical, squareIconSize / 2, UniUrls.MEDICAL, "", true, constraints),
+                                _buildGridItem(context, ImgAssets.hotelcook, squareIconSize / 2, UniUrls.COOK, "", true, constraints), // 호텔조리
+                                _buildGridItem(context, ImgAssets.hotel, squareIconSize / 2, UniUrls.HOTEL, "", true, constraints), // 호텔경영
+                                _buildGridItem(context, ImgAssets.police, squareIconSize / 2, UniUrls.POLICE, "", true, constraints), // 행정경찰
+                                _buildGridItem(context, ImgAssets.air, squareIconSize / 2, UniUrls.AIR, "", true, constraints), // 항공서비스
+                                _buildGridItem(context, ImgAssets.eco, squareIconSize / 2, UniUrls.ECO, "", true, constraints), // 융경
+                                _buildGridItem(context, ImgAssets.openmajor, squareIconSize / 2, UniUrls.OPENMAJOR, "", true, constraints), // 자전
+                                _buildGridItem(context, ImgAssets.orient, squareIconSize / 2, UniUrls.ORIENT, "", true, constraints), // 한의학
+                                _buildGridItem(context, ImgAssets.medical, squareIconSize / 2, UniUrls.MEDICAL, "", true, constraints), // 의예과
                               ],
                             ),
                           ],
@@ -189,11 +189,11 @@ class _WebViewScreenState extends State<WebViewScreen> with SingleTickerProvider
   double _calculateListHeight(String listTitle) {
     switch (listTitle) {
       case '간호대학':
-        return 230;  // 간호대학 리스트 높이
+        return 230; // 간호대학 리스트 높이
       case '불교대학':
-        return 230;  // 불교대학 리스트 높이
+        return 230; // 불교대학 리스트 높이
       default:
-        return 375;  // 기본 리스트 높이
+        return 375; // 기본 리스트 높이
     }
   }
 
@@ -390,11 +390,8 @@ class _WebViewScreenState extends State<WebViewScreen> with SingleTickerProvider
         body: SafeArea(
           child: Stack(
             children: [
-              WebViewWidget(
-                controller: _controller,
-              ),
-              if (_isLoading)
-                Center(child: CircularProgressIndicator()),
+              WebViewWidget(controller: _controller),
+              if (_isLoading) Center(child: CircularProgressIndicator()),
               if (widget.listTitle.isNotEmpty)
                 Positioned(
                   right: 20,
@@ -449,6 +446,17 @@ class _WebViewScreenState extends State<WebViewScreen> with SingleTickerProvider
                   child: GestureDetector(
                     onTap: _toggleListVisibility,
                     child: Image.asset(ImgAssets.listbutton, width: 55, height: 55),
+                  ),
+                ),
+              if (widget.showHomeButton && widget.listTitle.isEmpty)
+                Positioned(
+                  right: 20,
+                  bottom: 20,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.popUntil(context, (route) => route.isFirst);
+                    },
+                    child: Image.asset('assets/home.png', width: 55, height: 55),
                   ),
                 ),
             ],
