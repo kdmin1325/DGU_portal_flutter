@@ -3,5 +3,8 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.9 (Data_Acquisition_Application-master)" />
   </component>
+  <component name="FrameworkDetectionExcludesConfiguration">
+    <file url="file://$PROJECT_DIR$" />
+  </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.9 (DGU_portal_flutter)" project-jdk-type="Python SDK" />
 </project>
