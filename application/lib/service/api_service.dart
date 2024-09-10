@@ -16,13 +16,13 @@ class ApiService {
     // 안드로이드 엔드포인트
     switch (buttonColor) {
       case 'general':
-        endpoint = 'and/information/generalnotice';
+        endpoint = '/and/information/generalnotice';
         break;
       case 'school':
-        endpoint = 'and/information/acdnotice';
+        endpoint = '/and/information/acdnotice';
         break;
       case 'employment':
-        endpoint = 'and/information/empprgnoti';
+        endpoint = '/and/information/empprgnoti';
         break;
       default:
         return 'error in endpoint';
