@@ -103,7 +103,6 @@ flutter:
     - assets/mnoti.png
     - assets/uni.png
     - assets/noti.png
-    - assets/scnoti.png
     - assets/donoti.png
     - assets/air.png
     - assets/book_uni.png
@@ -121,3 +120,4 @@ flutter:
     - assets/nu_uni.png
     - assets/pol.png
     - assets/ndrims.png
+    - assets/listbutton.png
