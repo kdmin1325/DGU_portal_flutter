@@ -456,7 +456,7 @@ class _WebViewScreenState extends State<WebViewScreen> with SingleTickerProvider
                     onTap: () {
                       Navigator.popUntil(context, (route) => route.isFirst);
                     },
-                    child: Image.asset('assets/home.png', width: 55, height: 55),
+                    child: Image.asset(ImageAssets.home, width: 55, height: 55),
                   ),
                 ),
             ],

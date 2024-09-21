@@ -8,7 +8,7 @@ class ApiUrls {
 class MainUrls {
   static const String ECLASS = 'https://eclass.dongguk.ac.kr/home/mainHome/Form/main'; // eclass
   static const String GENERALNOTICE = 'https://web.dongguk.ac.kr/article/generalnotice/list'; // 일반공지
-  static const String BUS = 'https://dongguk.unibus.kr/#/'; // 통학버스
+  static const String BUS = 'https://dongguk.unibus.kr'; // 통학버스
   static const String NDRIMS = 'https://ndrims.dongguk.ac.kr/unis/index.do'; // ndrims
   static const String MONEYNOTICE = 'https://web.dongguk.ac.kr/article/servicenotice/list'; // 장학공지
   static const String DORMNOTiCE = 'https://dorm.dongguk.ac.kr/'; // 단과대 버튼
