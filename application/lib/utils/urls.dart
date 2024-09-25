@@ -11,7 +11,7 @@ class MainUrls {
   static const String BUS = 'https://dongguk.unibus.kr'; // 통학버스
   static const String NDRIMS = 'https://ndrims.dongguk.ac.kr/unis/index.do'; // ndrims
   static const String MONEYNOTICE = 'https://web.dongguk.ac.kr/article/servicenotice/list'; // 장학공지
-  static const String DORMNOTiCE = 'https://dorm.dongguk.ac.kr/'; // 단과대 버튼
+  static const String DORMNOTICE = 'https://dorm.dongguk.ac.kr/'; // 단과대 버튼
 }
 
 // 모든 url은 순서대로 배치되어 있음
