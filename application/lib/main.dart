@@ -116,7 +116,7 @@ class _MainScreenState extends State<MainScreen> {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             _buildCircleItem(context, ImageAssets.mnoti, circleIconSize, MainUrls.MONEYNOTICE, false, false), // 장학 공지
-                            _buildCircleItem(context, ImageAssets.donoti, circleIconSize, MainUrls.DORMNOTiCE, true, false), // 금장생활관
+                            _buildCircleItem(context, ImageAssets.donoti, circleIconSize, MainUrls.DORMNOTICE, true, false), // 금장생활관
                             _buildCircleItem(context, ImageAssets.uni, circleIconSize, null, false, true), // 단과대 페이지 이동 버튼
                           ],
                         ),
