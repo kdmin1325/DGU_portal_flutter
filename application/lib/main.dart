@@ -1,8 +1,11 @@
-import 'package:application/utils/img_assets.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/gestures.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
+
+import 'package:application/utils/img_assets.dart';
 import 'uni.dart';
 import '../service/api_service.dart';
 import '../utils/urls.dart';
@@ -146,13 +149,8 @@ class _MainScreenState extends State<MainScreen> {
       child: Row(
         children: [
           Container(
-
-            // ios 알림창 크기
-            //width: 30,
-
-            // android 알림창 크기
+            // 알림창 크기
             width: 35,
-
             height: containerHeight,
             decoration: BoxDecoration(
               color: Colors.grey[200],
@@ -229,7 +227,6 @@ class _MainScreenState extends State<MainScreen> {
       // URL이 포함된 경우를 찾음
       int startIdx = line.indexOf('http');
       if (startIdx != -1) {
-        // URL이 시작되는 위치 이후에 공백이나 닫는 괄호로 URL의 끝을 찾음
         int endIdx = line.indexOf(' ', startIdx);
         if (endIdx == -1) {
           endIdx = line.indexOf(')', startIdx);
@@ -241,7 +238,6 @@ class _MainScreenState extends State<MainScreen> {
         String url = line.substring(startIdx, endIdx).trim();
         String text = line.substring(0, startIdx).trim();
 
-        // 출력 에러로 인한 맨 끝에 있는 '(' 제거
         if (text.endsWith('(')) {
           text = text.substring(0, text.length - 1).trim();
         }
@@ -252,12 +248,11 @@ class _MainScreenState extends State<MainScreen> {
             style: TextStyle(color: Colors.black),
             recognizer: TapGestureRecognizer()
               ..onTap = () {
-               _openWebView(context, url, false, true);
+                _openWebView(context, url, false, true);
               },
           ),
         );
       } else {
-        // 일반 텍스트인 경우
         spans.add(TextSpan(text: '$line\n'));
       }
     }
@@ -292,18 +287,73 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  // 웹뷰 조건
-  void _openWebView(BuildContext context, String? url, bool? showHomeIcon, bool? showHeader) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => WebViewScreen(
-          url: url ?? '',
-          showHomeIcon: showHomeIcon ?? false,
-          showHeader: showHeader ?? true,
+  // 웹뷰 열기 전에 상태 코드 확인
+  void _openWebView(BuildContext context, String? url, bool? showHomeIcon, bool? showHeader) async {
+    if (url != null && await _checkUrlStatusCode(url)) {
+      // 응답이 200이면 웹뷰로 이동
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => WebViewScreen(
+            url: url,
+            showHomeIcon: showHomeIcon ?? false,
+            showHeader: showHeader ?? true,
+          ),
+        ),
+      );
+    } else {
+      // 응답이 200이 아닌 경우 화면 중앙에 오류 메시지 표시
+      _showConnectionError(context);
+    }
+  }
+
+  // URL 상태 코드 확인
+  Future<bool> _checkUrlStatusCode(String url) async {
+    try {
+      final response = await http.get(Uri.parse(url));
+      return response.statusCode == 200;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // 오류 메시지 표시 - Overlay로 구현
+  void _showConnectionError(BuildContext context) {
+    OverlayEntry overlayEntry;
+    overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        top: MediaQuery.of(context).size.height * 0.5,
+        left: MediaQuery.of(context).size.width * 0.07,
+        right: MediaQuery.of(context).size.width * 0.07,
+        child: Material(
+          color: Colors.transparent,
+          child: AnimatedOpacity(
+            opacity: 1.0,
+            duration: Duration(milliseconds: 500),
+            child: Container(
+              padding: EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.5), // 배경 색 및 투명도 조절
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: Text(
+                  '인터넷 연결이 없습니다',
+                  style: TextStyle(color: Colors.white, fontSize: 23),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );
+
+    Overlay.of(context).insert(overlayEntry);
+
+    Future.delayed(Duration(seconds: 2), () {
+      overlayEntry.remove();
+    });
   }
 
   // 단과대 페이지 넘어가는 함수
